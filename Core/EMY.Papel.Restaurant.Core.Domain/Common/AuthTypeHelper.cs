@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EMY.Papel.Restaurant.Core.Domain.Common
+{
+    public static class AuthTypeHelper
+    {
+        public static string GetAuthCode(string FormName, AuthType AuthorizeType)
+        {
+            string result = AuthorizeType switch
+            {
+                AuthType.Read => FormName + "Show",
+                AuthType.Write => FormName + "Add",
+                AuthType.Delete => FormName + "Del",
+                AuthType.Update => FormName + "Up",
+                AuthType.Full => FormName + "Full",
+                _ => throw new NotSupportedException()
+            };
+            return result;
+        }
+    }
+}

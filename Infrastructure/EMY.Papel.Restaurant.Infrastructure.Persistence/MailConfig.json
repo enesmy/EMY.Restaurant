@@ -1,0 +1,8 @@
+{
+  "DisplayName": "Papel Lounge",
+  "CredentialPassword": "",
+  "MailAdress": "MailAdress",
+  "SmtpServer": "",
+  "SmtpPort": "",
+  "RequireSSL": "True"
+}

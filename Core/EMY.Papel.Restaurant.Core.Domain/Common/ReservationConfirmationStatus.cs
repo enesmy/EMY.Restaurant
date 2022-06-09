@@ -1,0 +1,11 @@
+﻿namespace EMY.Papel.Restaurant.Core.Domain.Common
+{
+    public enum ReservationConfirmationStatus
+    {
+        Pending = 0,
+        Authorized = 1,
+        Confirmed = 2,
+        Rejected = 3,
+        Complated = 4
+    }
+}

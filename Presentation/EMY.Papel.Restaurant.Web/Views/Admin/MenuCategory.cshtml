@@ -1,0 +1,89 @@
+﻿@using EMY.Papel.Restaurant.Core.Domain.Entities;
+@using System.Collections.Generic;
+
+@model List<MenuCategory>
+
+@{
+    ViewData["Title"] = "Menu Settings";
+    Layout = "~/Views/Shared/MaterialDashboard2/_ThemeMaterialDashboard2.cshtml";
+}
+<button class="btn btn-sm border-dark btn-dark">Create New Category</button>
+<table class="table table-striped table-hover table-responsive-lg">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col" colspan="3">Menu Categories</th>
+        </tr>
+        <tr>
+
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody class="tbody-light">
+        @foreach (var menuCategory in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => menuCategory.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => menuCategory.Description)
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-primary">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <td colspan="5">
+                                    Menu
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#</td>
+                                <td>Name</td>
+                                <td>Description</td>
+                                <td>Price</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var menu in menuCategory.Menus)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => menu.Code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => menu.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => menu.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => menu.Price)
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Delete</button>
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function onClickCreateNewCategory() {
+        alert("Create New Category");
+    }
+</script>
