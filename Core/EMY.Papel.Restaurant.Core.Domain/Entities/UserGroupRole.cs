@@ -13,7 +13,6 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string FormName { get; set; }
         public AuthType AuthorizeType { get; set; }
         [ForeignKey("UserGroupID")] public virtual UserGroup UserGroup { get; set; }
-        [ForeignKey("RoleID")] public virtual Role Role { get; set; }
 
     }
 }

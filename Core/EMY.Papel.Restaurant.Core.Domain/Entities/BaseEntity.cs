@@ -14,7 +14,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public DateTime UpdatedAt { get; set; }
         [Required]
         public bool IsDeleted { get; set; }
-        public DateTime DeletedAt { get; set; }
+        public DateTime? DeletedAt { get; set; }
         public Guid? DeleterID { get; set; }
     }
 }

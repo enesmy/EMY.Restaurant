@@ -125,7 +125,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
                     UserGroupName = ControllerName,
                     UserGroupToolTip = "Admin Group has all authorizes!"
                 };
-                await _userGroupWriteRepository.AddAsync(adminGroup, new Guid());
+                await _userGroupWriteRepository.AddAsync(adminGroup, Guid.Empty);
                 var admingroupauthorize = new UserGroupRole()
                 {
                     AuthorizeType = AuthType.Full,
@@ -137,7 +137,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
             }
             return adminGroup.UserGroupID;
 #else
-return -1;
+return Guid.Empty;
 #endif
 
         }
@@ -163,7 +163,11 @@ return -1;
                     WrongForceCount = 0,
                     IsDeleted = false,
                     IsLocked = false,
-                    UserGroupID = adminGroupID
+                    UserGroupID = adminGroupID,
+                    Phone="",
+                    UserStatus = UserStatus.Active,
+                   
+
 
                 };
                 await _userWriteRepository.AddAsync(adminProfile, Guid.Empty);
@@ -232,8 +236,8 @@ return;
             List<UserGroupRole> usergrouproles = _userGroupReadRepository.GetUserGroupRolesFromUserGroup(UserGroupID);
             ViewBag.UserGroupID = UserGroupID;
             var usergroup = await _userGroupReadRepository.GetByIdAsync(Guid.Parse(UserGroupID));
-            if (usergroup != null)
-                return NotFound();
+            if (usergroup == null)
+                return Unauthorized();
 
             ViewBag.UserGroup = usergroup.GetGroupName();
             ViewBag.ToolTip = usergroup.UserGroupToolTip;

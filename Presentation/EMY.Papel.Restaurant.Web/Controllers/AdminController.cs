@@ -15,7 +15,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
 {
     public class AdminController : Controller
     {
-       
+
 
         private readonly IReservationReadRepository _reservationRead;
         private readonly IBasketReadRepository _basketRead;
@@ -25,8 +25,9 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         private readonly IReservationWriteRepository _reservationWrite;
         private readonly IEmailService _mailSystem;
         private readonly IMenuCategoryReadRepository _menuCategoryRead;
+        private readonly IMenuCategoryWriteRepository _menuCategoryWrite;
 
-        public AdminController(IReservationReadRepository reservationRead, IBasketReadRepository basketRead, IPhotoWriteRepository photoWrite, IMenuReadRepository menuRead, IMenuWriteRepository menuWrite, IReservationWriteRepository reservationWrite, IMenuCategoryReadRepository menuCategoryRead)
+        public AdminController(IReservationReadRepository reservationRead, IBasketReadRepository basketRead, IPhotoWriteRepository photoWrite, IMenuReadRepository menuRead, IMenuWriteRepository menuWrite, IReservationWriteRepository reservationWrite, IMenuCategoryReadRepository menuCategoryRead, IEmailService mailSystem, IMenuCategoryWriteRepository menuCategoryWrite)
         {
             _reservationRead = reservationRead;
             _basketRead = basketRead;
@@ -35,10 +36,13 @@ namespace EMY.Papel.Restaurant.Web.Controllers
             _menuWrite = menuWrite;
             _reservationWrite = reservationWrite;
             _menuCategoryRead = menuCategoryRead;
+            _mailSystem = mailSystem;
+            _menuCategoryWrite = menuCategoryWrite;
         }
 
         public async Task<IActionResult> Dashboard()
         {
+
             var reservationstats = _reservationRead.GetReservationStats();
             ViewBag.ReservationStats = reservationstats;
 
@@ -83,8 +87,26 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         public async Task<IActionResult> MenuCategory()
         {
             List<MenuCategory> menuCategory = await _menuCategoryRead.GetAllMenuCategoryWithMenus();
-            
+
             return View(menuCategory);
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveCategory(string name, string description)
+        {
+            MenuCategory menuCategory = new MenuCategory()
+            {
+                Description = description,
+                Name = name,
+                Active = true
+            };
+            await _menuCategoryWrite.AddAsync(menuCategory, this.ActiveUserID());
+            return Ok();
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> CreateCategory()
+        {
+            return PartialView(new MenuCategory());
         }
         [HttpGet]
         public async Task<IActionResult> GetMenu(string MenuCategoryID)
@@ -141,7 +163,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
             {
                 return BadRequest("Reservation is pending, you can only change to authorized!");
             }
-            if(
+            if (
                 (reservation.ConfirmationStatus == ReservationConfirmationStatus.Confirmed ||
                 reservation.ConfirmationStatus == ReservationConfirmationStatus.Rejected) &&
                 status != ReservationConfirmationStatus.Authorized)

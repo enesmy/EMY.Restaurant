@@ -4,6 +4,7 @@ using EMY.Papel.Restaurant.Core.Application.Repositories.MailListRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuCategoryRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.OrderRepositories;
+using EMY.Papel.Restaurant.Core.Application.Repositories.PasswordHistoryRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.PhotoRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.ReservationRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRepositories;
@@ -16,6 +17,7 @@ using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.BasketReposit
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.MailListRepositories;
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.MenuCategoryRepositories;
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.MenuRepositories;
+using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.PasswordHistoryRepositories;
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.PhotoRepositories;
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.ReservationRepositories;
 using EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserGroupRepositories;
@@ -51,6 +53,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
             services.AddScoped<IUserGroupReadRepository, UserGroupReadRepository>();
             services.AddScoped<IUserGroupRoleReadRepository, UserGroupRoleReadRepository>();
             services.AddScoped<IUserReadRepository, UserReadRepository>();
+            services.AddScoped<IPasswordHistoryReadRepository, PasswordHistoryReadRepository>();
         }
         public static void AddPersistanceServicesWrites(this IServiceCollection services)
         {
@@ -64,6 +67,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
             services.AddScoped<IUserGroupWriteRepository, UserGroupWriteRepository>();
             services.AddScoped<IUserGroupRoleWriteRepository, UserGroupRoleWriteRepository>();
             services.AddScoped<IUserWriteRepository, UserWriteRepository>();
+            services.AddScoped<IPasswordHistoryWriteRepository, PasswordHistoryWriteRepository>();
         }
 
     }

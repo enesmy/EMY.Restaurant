@@ -4,6 +4,7 @@ using EMY.Papel.Restaurant.Infrastructure.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(EMYRestaurantDbContext))]
-    partial class EMYRestaurantDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220610103939_v1")]
+    partial class v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -444,10 +446,10 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("LastUpdaterID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("LastWrongTryingTime")
+                    b.Property<DateTime>("LastWrongTryingTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("LockedTime")
+                    b.Property<DateTime>("LockedTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
@@ -469,8 +471,15 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<decimal>("UserBalance")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<Guid>("UserGroupID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UserImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -478,6 +487,14 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
                     b.Property<int>("UserStatus")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WrongForceCount")
                         .HasColumnType("int");

@@ -24,13 +24,6 @@
     <link rel="apple-touch-icon" type="image/x-icon" href="/img/favicons/cropped-papel-white-logo-01-180x180.png" sizes="180x180" id="light-scheme-icon-x180" />
     <meta name="msapplication-TileImage" type="image/x-icon" content="/img/favicons/cropped-papel-white-logo-01-270x270.png" id="light-scheme-icon-x270" />
 
-    @*
-    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" type="image/x-icon" href="img/apple-touch-icon-57x57-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="72x72" href="img/apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="114x114" href="img/apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon" type="image/x-icon" sizes="144x144" href="img/apple-touch-icon-144x144-precomposed.png">
-    *@
 
     <!-- GOOGLE WEB FONT -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -669,13 +662,36 @@
         </div>
         <!-- /.modal-dialog -->
     </div>
+
+    <div class="modal fade" id="MessageboxModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" 
+    role="dialog" aria-labelledby="messageboxModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageboxModalLabel">header</h5>
+                    <button class="close" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="messageboxModalContent">content</div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" type="button" onclick="MessageBox.saveClicked()" id="modalSave" data-bs-dismiss="modal">Save</button>
+                    <button class="btn btn-success" type="button" onclick="MessageBox.yesClicked()" id="modalYes" data-bs-dismiss="modal">Yes</button>    
+                    <button class="btn btn-danger" type="button" onclick="MessageBox.noClicked()" id="modalNo" data-bs-dismiss="modal">No</button>                    
+                    <button class="btn btn-secondary" type="button" onclick="MessageBox.clear()" id="modalClose" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <!-- /.modal -->
     <!-- COMMON SCRIPTS -->
     <script src="/Themes/FooresRestaurant/js/common_scripts.min.js"></script>
     <script src="/Themes/FooresRestaurant/js/slider.js"></script>
     <script src="/Themes/FooresRestaurant/js/common_func.js"></script>
     <script src="/js/site.js"></script>
-
+    <script src="~/js/MessageBox.js"></script>
+        
     <!-- SPECIFIC SCRIPTS (wizard form) -->
     <script src="/Themes/FooresRestaurant/js/wizard/wizard_scripts.min.js"></script>
     <script src="/Themes/FooresRestaurant/js/wizard/wizard_func.js"></script>

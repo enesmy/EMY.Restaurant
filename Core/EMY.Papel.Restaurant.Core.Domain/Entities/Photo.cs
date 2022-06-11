@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMY.Papel.Restaurant.Core.Domain.Entities
 {
+    [Table("tblPhoto", Schema = "dbo")]
     public class Photo : BaseEntity
     {
 

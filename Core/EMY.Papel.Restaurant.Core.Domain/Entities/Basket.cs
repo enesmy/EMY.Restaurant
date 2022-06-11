@@ -1,9 +1,13 @@
 ﻿using EMY.Papel.Restaurant.Core.Domain.Common;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EMY.Papel.Restaurant.Core.Domain.Entities
 {
+    [Table("tblBasket", Schema = "basket")]
     public class Basket : BaseEntity
     {
+        [Key]
         public Guid BasketID { get; set; }
         public string FullName { get; set; }
         public string EmailAdress { get; set; }

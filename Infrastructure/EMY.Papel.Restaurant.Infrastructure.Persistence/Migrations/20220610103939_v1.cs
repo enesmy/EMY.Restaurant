@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,6 +9,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "basket");
+
             migrationBuilder.EnsureSchema(
                 name: "mail");
 
@@ -21,7 +25,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 name: "authorize");
 
             migrationBuilder.CreateTable(
-                name: "Baskets",
+                name: "tblBasket",
+                schema: "basket",
                 columns: table => new
                 {
                     BasketID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -41,12 +46,12 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Baskets", x => x.BasketID);
+                    table.PrimaryKey("PK_tblBasket", x => x.BasketID);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,7 +72,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -89,7 +94,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -109,13 +114,13 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    ConfirmationStatus = table.Column<int>(type: "int", nullable: false),
                     CreatorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -136,7 +141,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -150,15 +155,17 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     UserGroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserGroupCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserGroupName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserGroupToolTip = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DefaultUserGroup = table.Column<bool>(type: "bit", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -167,7 +174,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BasketItems",
+                name: "tblBasketItem",
+                schema: "basket",
                 columns: table => new
                 {
                     BasketItemID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -181,16 +189,17 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BasketItems", x => x.BasketItemID);
+                    table.PrimaryKey("PK_tblBasketItem", x => x.BasketItemID);
                     table.ForeignKey(
-                        name: "FK_BasketItems_Baskets_BasketID",
+                        name: "FK_tblBasketItem_tblBasket_BasketID",
                         column: x => x.BasketID,
-                        principalTable: "Baskets",
+                        principalSchema: "basket",
+                        principalTable: "tblBasket",
                         principalColumn: "BasketID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -201,17 +210,19 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     MenuID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     MenuCategoryID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PhotoID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -233,26 +244,19 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 {
                     UserGrpoupRoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserGroupID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AuthDegree = table.Column<int>(type: "int", nullable: false),
+                    FormName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AuthorizeType = table.Column<int>(type: "int", nullable: false),
                     CreatorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_tblUserGroupRoles", x => x.UserGrpoupRoleID);
-                    table.ForeignKey(
-                        name: "FK_tblUserGroupRoles_tblRoles_RoleID",
-                        column: x => x.RoleID,
-                        principalSchema: "authorize",
-                        principalTable: "tblRoles",
-                        principalColumn: "RoleID",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_tblUserGroupRoles_tblUserGroups_UserGroupID",
                         column: x => x.UserGroupID,
@@ -279,12 +283,21 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     UserToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserBalance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PasswordStored = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HiddenQuestionAnswer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsLocked = table.Column<bool>(type: "bit", nullable: false),
+                    LockedTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    WrongForceCount = table.Column<int>(type: "int", nullable: false),
+                    LastWrongTryingTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    HiddenQuestion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatorID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdaterID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeleterID = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -300,8 +313,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BasketItems_BasketID",
-                table: "BasketItems",
+                name: "IX_tblBasketItem_BasketID",
+                schema: "basket",
+                table: "tblBasketItem",
                 column: "BasketID");
 
             migrationBuilder.CreateIndex(
@@ -309,12 +323,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 schema: "menu",
                 table: "tblMenu",
                 column: "MenuCategoryID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblUserGroupRoles_RoleID",
-                schema: "authorize",
-                table: "tblUserGroupRoles",
-                column: "RoleID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblUserGroupRoles_UserGroupID",
@@ -332,7 +340,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BasketItems");
+                name: "tblBasketItem",
+                schema: "basket");
 
             migrationBuilder.DropTable(
                 name: "tblMailList",
@@ -347,6 +356,10 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 schema: "reservation");
 
             migrationBuilder.DropTable(
+                name: "tblRoles",
+                schema: "authorize");
+
+            migrationBuilder.DropTable(
                 name: "tblUserGroupRoles",
                 schema: "authorize");
 
@@ -355,15 +368,12 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                 schema: "authorize");
 
             migrationBuilder.DropTable(
-                name: "Baskets");
+                name: "tblBasket",
+                schema: "basket");
 
             migrationBuilder.DropTable(
                 name: "tblMenuCategory",
                 schema: "menu");
-
-            migrationBuilder.DropTable(
-                name: "tblRoles",
-                schema: "authorize");
 
             migrationBuilder.DropTable(
                 name: "tblUserGroups",

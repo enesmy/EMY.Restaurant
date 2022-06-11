@@ -18,12 +18,19 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories
 
         public async Task<int> AddAsync(TEntity entity, Guid creater)
         {
+            entity.CreatorID = creater;
+            entity.LastUpdaterID = creater;
             await Table.AddAsync(entity);
             return await SaveChangesAsync(default);
         }
 
         public async Task<int> AddRangeAsync(IList<TEntity> entities, Guid creater)
         {
+            foreach (var entity in entities)
+            {
+                entity.CreatorID = creater;
+                entity.LastUpdaterID = creater;
+            }
             await Table.AddRangeAsync(entities);
             return await SaveChangesAsync(default);
         }
@@ -32,16 +39,18 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories
         {
 #if DEBUG
             Table.Remove(entity);
-            return await SaveChangesAsync(default);
 #else
-            ((BaseEntity)entity).IsDeleted = true;  
-            return await UpdateAsync(entity);
+            entity.IsDeleted = true;
+            entity.DeleterID = remover;
+            Table.Update(entity);
 #endif
+            return await SaveChangesAsync(default);
         }
 
         public Task<int> RemoveAsync(Guid id, Guid remover)
         {
             var entity = Table.Find(id);
+            entity.DeleterID = remover;
             return RemoveAsync(entity, remover);
         }
 
@@ -51,6 +60,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories
             foreach (var id in IDs)
             {
                 var entity = await Table.FindAsync(id);
+                entity.DeleterID = remover;
                 entities.Add(entity);
             }
             return await RemoveRangeAsync(entities, remover);
@@ -64,8 +74,10 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories
             Table.RemoveRange(entities);
             return await SaveChangesAsync(default);
 #else
-            entities.ToList().ForEach(o => o.IsDeleted = true);  
-            return await UpdateRangeAsync(entities);
+
+            entities.ToList().ForEach(o => { o.IsDeleted = true; o.DeleterID = remover; });
+            Table.UpdateRange(entities);
+            return await SaveChangesAsync(default);
 #endif
         }
 
@@ -77,19 +89,25 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories
 
         public async Task<int> UpdateAsync(TEntity entity, Guid updater)
         {
+            entity.LastUpdaterID = updater;
             Table.Update(entity);
             return await SaveChangesAsync(default);
         }
 
         public async Task<int> UpdateRangeAsync(IList<TEntity> entities, Guid updater)
         {
+            foreach (var entity in entities)
+            {
+                entity.LastUpdaterID = updater;
+            }
+
             Table.UpdateRange(entities);
             return await SaveChangesAsync(default);
         }
 
-        public Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        public async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return _context.SaveChangesAsync(cancellationToken);
+            return await _context.SaveChangesAsync(cancellationToken);
         }
 
     }

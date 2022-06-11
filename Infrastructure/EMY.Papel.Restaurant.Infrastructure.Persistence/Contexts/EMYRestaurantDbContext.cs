@@ -24,7 +24,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Contexts
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             CreatedAndLastUpdatedDate();
-            if (!Validation()) return 0;
+            if (Validation()) return 0;
             return await base.SaveChangesAsync(cancellationToken);
         }
 
@@ -68,6 +68,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Contexts
                         break;
                     case EntityState.Added:
                         item.Entity.CreatedAt = DateTime.UtcNow;
+                        item.Entity.UpdatedAt = DateTime.UtcNow;
+                        item.Entity.IsDeleted = false;
                         break;
                     default:
                         break;

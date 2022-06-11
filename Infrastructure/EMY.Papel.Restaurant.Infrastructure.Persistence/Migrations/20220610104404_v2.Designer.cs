@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(EMYRestaurantDbContext))]
-    [Migration("20220604135855_v1")]
-    partial class v1
+    [Migration("20220610104404_v2")]
+    partial class v2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -91,7 +91,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
                     b.HasKey("BasketID");
 
-                    b.ToTable("Baskets");
+                    b.ToTable("tblBasket", "basket");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.BasketItem", b =>
@@ -109,7 +109,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -141,7 +141,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
                     b.HasIndex("BasketID");
 
-                    b.ToTable("BasketItems");
+                    b.ToTable("tblBasketItem", "basket");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.MailList", b =>
@@ -159,7 +159,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -207,13 +207,17 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -239,6 +243,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("PhotoID")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -268,7 +275,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -302,6 +309,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("ConfirmationStatus")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -311,7 +321,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -320,9 +330,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsConfirmed")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -365,7 +372,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -405,7 +412,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
@@ -415,7 +422,21 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("HiddenQuestion")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("HiddenQuestionAnswer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -425,7 +446,17 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("LastUpdaterID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("LastWrongTryingTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("LockedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Notes")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -450,6 +481,10 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("UserStatus")
                         .HasColumnType("int");
 
@@ -460,6 +495,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<string>("UserType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("WrongForceCount")
+                        .HasColumnType("int");
 
                     b.HasKey("UserID");
 
@@ -480,15 +518,14 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<bool>("DefaultUserGroup")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -499,12 +536,20 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("LastUpdaterID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Name")
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserGroupCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UserGroupName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserGroupToolTip")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserGroupID");
 
@@ -517,7 +562,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("AuthDegree")
+                    b.Property<int>("AuthorizeType")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -526,19 +571,20 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("DeletedAt")
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("DeleterID")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("FormName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LastUpdaterID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RoleID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -549,8 +595,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
                     b.HasKey("UserGrpoupRoleID");
 
-                    b.HasIndex("RoleID");
-
                     b.HasIndex("UserGroupID");
 
                     b.ToTable("tblUserGroupRoles", "authorize");
@@ -558,17 +602,19 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.BasketItem", b =>
                 {
-                    b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", null)
+                    b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", "Basket")
                         .WithMany("BasketItems")
                         .HasForeignKey("BasketID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Basket");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Menu", b =>
                 {
                     b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.MenuCategory", "Category")
-                        .WithMany()
+                        .WithMany("Menus")
                         .HasForeignKey("MenuCategoryID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -589,19 +635,11 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.UserGroupRole", b =>
                 {
-                    b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.UserGroup", "UserGroup")
                         .WithMany("Roles")
                         .HasForeignKey("UserGroupID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Role");
 
                     b.Navigation("UserGroup");
                 });
@@ -609,6 +647,11 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", b =>
                 {
                     b.Navigation("BasketItems");
+                });
+
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.MenuCategory", b =>
+                {
+                    b.Navigation("Menus");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.UserGroup", b =>

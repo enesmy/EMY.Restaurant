@@ -16,14 +16,11 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string Email { get; set; }
         [Phone]
         public string Phone { get; set; }
-        public string UserType { get; set; }
+        
         [DefaultValue(0)]
         public UserStatus UserStatus { get; set; }
         public Guid UserGroupID { get; set; }
         [ForeignKey("UserGroupID")] public UserGroup Group { get; set; }
-        public string UserImage { get; set; }
-        public string UserToken { get; set; }
-        public decimal UserBalance { get; set; }
 
         public string PasswordStored { get; set; }
 
@@ -37,9 +34,9 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public bool IsActive { get; set; }
         public string UserName { get; set; }
         public bool IsLocked { get; set; }
-        public DateTime LockedTime { get; set; }
+        public DateTime? LockedTime { get; set; }
         public int WrongForceCount { get; set; }
-        public DateTime LastWrongTryingTime { get; set; }
+        public DateTime? LastWrongTryingTime { get; set; }
         public string HiddenQuestion { get; set; }
         public string Notes { get; set; }
 

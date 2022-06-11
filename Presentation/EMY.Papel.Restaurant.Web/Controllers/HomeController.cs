@@ -15,7 +15,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return PartialView();
         }
 
         public IActionResult Privacy()

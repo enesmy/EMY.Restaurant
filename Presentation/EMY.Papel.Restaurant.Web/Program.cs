@@ -1,10 +1,16 @@
 using EMY.Papel.Restaurant.Infrastructure.Persistence;
+using EMY.Papel.Restaurant.Web.Statics;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPersistanceServices();
+builder.Services.AddAuthentication(SystemMainStatics.DefaultScheme)
+             .AddCookie(SystemMainStatics.DefaultScheme, options =>
+             {
+                 options.LoginPath = new PathString("/Account/Login");
+             });
 
 var app = builder.Build();
 
@@ -22,9 +28,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Admin}/{action=Dashboard}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

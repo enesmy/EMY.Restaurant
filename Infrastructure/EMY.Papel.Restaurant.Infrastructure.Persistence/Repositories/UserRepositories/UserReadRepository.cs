@@ -1,4 +1,6 @@
 ﻿using EMY.Papel.Restaurant.Core.Application.Repositories.PasswordHistoryRepositories;
+using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRepositories;
+using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRoleRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.UserRepositories;
 using EMY.Papel.Restaurant.Core.Domain.Common;
 using EMY.Papel.Restaurant.Core.Domain.Entities;
@@ -8,10 +10,12 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserRepos
 {
     public class UserReadRepository : ReadRepository<User>, IUserReadRepository
     {
-        IPasswordHistoryReadRepository _passwordHistoryReadRepository;
-        public UserReadRepository(DbContext context, IPasswordHistoryReadRepository passwordHistoryReadRepository) : base(context)
+        IUserGroupReadRepository _userGroupReadRepository;
+        IUserGroupRoleReadRepository _userGroupRoleReadRepository;
+        public UserReadRepository(DbContext context, IUserGroupReadRepository userGroupReadRepository, IUserGroupRoleReadRepository userGroupRoleReadRepository) : base(context)
         {
-            _passwordHistoryReadRepository = passwordHistoryReadRepository;
+            _userGroupReadRepository = userGroupReadRepository;
+            _userGroupRoleReadRepository = userGroupRoleReadRepository;
         }
 
         public async Task<ResultModel<User>> CanIChangePassword(Guid userID, string newPassword, string hiddenQuestionAnswer)
@@ -34,28 +38,75 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserRepos
             {
                 result.Message = "Hidden answer is not correct!";
                 return result;
-            }
-
-            var history = _passwordHistoryReadRepository.GetWhere(o => o.UserID == userID);
-            if (history.OrderByDescending(o => o.PasswordHistoryID).Take(3).Count(o => o.PasswordHash == newPassword) > 0)
-            {
-                result.Message = "You are used in your history(Last 3 Password) this password!";
-                return result;
-            }
+            }           
             result.Value = prf;
             result.Message = "You can use this password!";
             result.IsSuccess = true;
             return result;
         }
 
-        public Task<ResultModel<User>> CheckLoginProfile(string userName, string password)
+        public async Task<ResultModel<User>> CheckLoginProfile(string userName, string password)
         {
-            throw new NotImplementedException();
+            ResultModel<User> result = new ResultModel<User>() { IsSuccess = false };
+
+            var usrs = Table.Where(o => o.IsActive && !o.IsDeleted && o.UserName.ToLower() == userName.ToLower());
+            if (usrs.Count() == 0)
+            {
+                result.Message = "User name is not found!";
+                return result;
+            }
+
+            foreach (var user in usrs)
+            {
+                if (user.PasswordControl(password))
+                {
+                    if (user.IsLocked && user.LockedTime < DateTime.Now.AddMinutes(-Configuration.LockedMinutes))
+                    {
+                        var diff = DateTime.Now.AddMinutes(-Configuration.LockedMinutes) - user.LockedTime.Value;
+                        result.Message = $"Please {diff.Minutes} minutes after re try! Because this user is forced!";
+                        return result;
+                    }
+                    user.Password = "";
+                    result.Value = user;
+                    result.IsSuccess = true;
+                    result.Message = $"Welcome {user.Name} {user.LastName}";
+                    return result;
+                }
+            }
+
+            result.Message = "Password is not correct!";
+            usrs.ToList().ForEach((usr) =>
+            {
+                if (!usr.IsLocked && usr.WrongForceCount + 1 >= Configuration.MaxWrongTryCount && usr.LastWrongTryingTime < DateTime.Now.AddMinutes(-Configuration.LockedMinutes))
+                {
+                    usr.WrongForceCount = 0;
+                    usr.LastWrongTryingTime = DateTime.Now;
+                    usr.LockedTime = DateTime.Now;
+                    usr.IsLocked = true;
+                    Table.Update(usr);
+                    result.Message = $"Please {Configuration.LockedMinutes} minutes after re try! Because this user is forced and now `Locked!´" + Environment.NewLine + $"You tried {Configuration.MaxWrongTryCount} times wrong!";
+                }
+                else
+                {
+                    usr.WrongForceCount++;
+                    usr.LastWrongTryingTime = DateTime.Now;
+                    Table.Update(usr);
+                }
+            });
+
+            return result;
         }
 
-        public Task<List<UserGroupRole>> GetAllRoles(Guid userID)
+        public async Task<List<UserGroupRole>> GetAllRoles(Guid userID)
         {
-            throw new NotImplementedException();
+            var user = await GetByIdAsync(userID);
+            if (user == null) return new List<UserGroupRole>();
+
+            var group = await _userGroupReadRepository.GetByIdAsync(user.UserGroupID);
+            if (group == null) return new List<UserGroupRole>();
+
+            var roles = _userGroupRoleReadRepository.GetWhere(o => o.UserGroupID == group.UserGroupID).ToList();
+            return roles;
         }
     }
 }
