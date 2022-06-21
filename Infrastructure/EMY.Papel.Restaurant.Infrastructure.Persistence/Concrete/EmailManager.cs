@@ -6,7 +6,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Concrete
 {
     public class EmailManager : IEmailService
     {
-        
+
         public async Task<(bool IsSuccess, string Message)> SendEmail(string email, string subject, string message, MailPriority mailPriority)
         {
             EmailSendConfigure emailConfig = new EmailSendConfigure()
@@ -42,21 +42,22 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Concrete
         private MailMessage ConstructEmailMessage(EmailSendConfigure emailConfig, EmailContent content)
         {
             MailMessage msg = new System.Net.Mail.MailMessage();
-            foreach (string to in emailConfig.TOs)
-            {
-                if (!string.IsNullOrEmpty(to))
+            if (emailConfig.TOs != null)
+                foreach (string to in emailConfig.TOs)
                 {
-                    msg.To.Add(to);
+                    if (!string.IsNullOrEmpty(to))
+                    {
+                        msg.To.Add(to);
+                    }
                 }
-            }
-
-            foreach (string cc in emailConfig.CCs)
-            {
-                if (!string.IsNullOrEmpty(cc))
+            if (emailConfig.CCs != null)
+                foreach (string cc in emailConfig.CCs)
                 {
-                    msg.CC.Add(cc);
+                    if (!string.IsNullOrEmpty(cc))
+                    {
+                        msg.CC.Add(cc);
+                    }
                 }
-            }
 
             msg.From = new MailAddress(emailConfig.From,
                                        emailConfig.FromDisplayName,

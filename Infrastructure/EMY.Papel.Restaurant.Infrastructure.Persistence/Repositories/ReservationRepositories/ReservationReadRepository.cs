@@ -24,7 +24,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.Reservati
 
         public List<Reservation> GetReservationsByDate(DateTime date)
         {
-            return GetWhere(o =>  o.Date.Date == date && !o.IsDeleted).ToList();
+            return GetWhere(o => o.Date.Date == date && !o.IsDeleted).ToList();
         }
 
         public List<Reservation> GetReservationsByDate(DateTime date, ReservationConfirmationStatus status)

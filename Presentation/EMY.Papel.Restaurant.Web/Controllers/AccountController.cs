@@ -164,9 +164,9 @@ return Guid.Empty;
                     IsDeleted = false,
                     IsLocked = false,
                     UserGroupID = adminGroupID,
-                    Phone="",
+                    Phone = "",
                     UserStatus = UserStatus.Active,
-                   
+
 
 
                 };

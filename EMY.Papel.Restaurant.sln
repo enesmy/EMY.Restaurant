@@ -22,7 +22,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMY.Papel.Restaurant.Web", "Presentation\EMY.Papel.Restaurant.Web\EMY.Papel.Restaurant.Web.csproj", "{B564103A-FA46-445A-98C0-CBD032BA9854}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EMY.Papel.Restaurant.Web", "Presentation\EMY.Papel.Restaurant.Web\EMY.Papel.Restaurant.Web.csproj", "{B564103A-FA46-445A-98C0-CBD032BA9854}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EMY.Papel.ImageProcessingTester", "EMY.Papel.ImageProcessingTester\EMY.Papel.ImageProcessingTester.csproj", "{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,10 @@ Global
 		{B564103A-FA46-445A-98C0-CBD032BA9854}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B564103A-FA46-445A-98C0-CBD032BA9854}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B564103A-FA46-445A-98C0-CBD032BA9854}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +66,7 @@ Global
 		{7D3FDB2A-F4D5-4272-AA4F-5757A3949D6C} = {D540220E-AB18-4F32-B44E-8CCDB5F23F05}
 		{3FE5461C-844E-4BC9-8A9F-34F49F43C585} = {D540220E-AB18-4F32-B44E-8CCDB5F23F05}
 		{B564103A-FA46-445A-98C0-CBD032BA9854} = {2DA0A6B2-8B7A-4F6D-89A0-8061CE557A60}
+		{BA6BF8ED-F258-4279-8A8B-6ACADC9EBA54} = {2DA0A6B2-8B7A-4F6D-89A0-8061CE557A60}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F14FE6E7-BF36-4784-AEC5-E52E5B963330}

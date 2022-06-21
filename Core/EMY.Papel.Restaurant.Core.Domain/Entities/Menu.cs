@@ -11,10 +11,11 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string Code { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string Image { get; set; }
         public decimal Price { get; set; }
         public Guid MenuCategoryID { get; set; }
         [ForeignKey("MenuCategoryID")] public virtual MenuCategory Category { get; set; }
         public Guid PhotoID { get; set; }
+        public string PhotoFileName { get; set; }
+        public string PhotoThumbFileName { get; set; }
     }
 }

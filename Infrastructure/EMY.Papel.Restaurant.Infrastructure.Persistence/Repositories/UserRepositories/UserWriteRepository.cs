@@ -38,7 +38,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserRepos
             return result;
         }
 
-    
+
         public async Task<bool> CheckRoleIsExist(string userID, string formName, AuthType type)
         {
             var roles = await GetAllRoles(userID);

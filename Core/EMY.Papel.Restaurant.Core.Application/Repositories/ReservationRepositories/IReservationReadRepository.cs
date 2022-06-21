@@ -1,6 +1,6 @@
-﻿using EMY.Papel.Restaurant.Core.Domain.Entities;
+﻿using EMY.Papel.Restaurant.Core.Domain.Common;
+using EMY.Papel.Restaurant.Core.Domain.Entities;
 using EMY.Papel.Restaurant.Core.Domain.ViewModels;
-using EMY.Papel.Restaurant.Core.Domain.Common;
 
 namespace EMY.Papel.Restaurant.Core.Application.Repositories.ReservationRepositories
 {

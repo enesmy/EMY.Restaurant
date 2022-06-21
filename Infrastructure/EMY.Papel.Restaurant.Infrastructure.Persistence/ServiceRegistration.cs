@@ -1,8 +1,8 @@
 ﻿using EMY.Papel.Restaurant.Core.Application.Abstract;
-using EMY.Papel.Restaurant.Core.Application.Repositories.BasketItemRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MailListRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuCategoryRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuRepositories;
+using EMY.Papel.Restaurant.Core.Application.Repositories.OrderItemRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.OrderRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.PasswordHistoryRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.PhotoRepositories;
@@ -43,8 +43,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
         }
         public static void AddPersistanceServicesReads(this IServiceCollection services)
         {
-            services.AddScoped<IBasketItemReadRepository, BasketItemReadRepository>();
-            services.AddScoped<IBasketReadRepository, BasketReadRepository>();
+            services.AddScoped<IOrderItemReadRepository, OrderItemReadRepository>();
+            services.AddScoped<IOrderReadRepository, OrderReadRepository>();
             services.AddScoped<IMailListReadRepository, MailListReadRepository>();
             services.AddScoped<IMenuCategoryReadRepository, MenuCategoryReadRepository>();
             services.AddScoped<IMenuReadRepository, MenuReadRepository>();
@@ -57,8 +57,8 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
         }
         public static void AddPersistanceServicesWrites(this IServiceCollection services)
         {
-            services.AddScoped<IBasketItemWriteRepository, BasketItemWriteRepository>();
-            services.AddScoped<IBasketWriteRepository, BasketWriteRepository>();
+            services.AddScoped<IOrderItemWriteRepository, OrderItemWriteRepository>();
+            services.AddScoped<IOrderWriteRepository, OrderWriteRepository>();
             services.AddScoped<IMailListWriteRepository, MailListWriteRepository>();
             services.AddScoped<IMenuCategoryWriteRepository, MenuCategoryWriteRepository>();
             services.AddScoped<IMenuWriteRepository, MenuWriteRepository>();

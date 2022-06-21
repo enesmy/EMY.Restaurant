@@ -6,7 +6,7 @@
 
 	jQuery(function ($) {
 		"use strict";
-		$('form#wrapped').attr('action', 'phpmailer/reserve_template_email.php');
+		
 		$("#wizard_container").wizard({
 			stepsWrapper: "#wrapped",
 			submit: ".submit",
@@ -65,13 +65,15 @@
 		$('#DatePicker').datepicker({
 		    showButtonPanel: false,
 		    inline: true,
-		    dateFormat:"mm/dd/yyyy",
+		    dateFormat:"yyyy-mm-dd",
 		    onSelect: function(dateText, inst) { $("#datepicker_field").val(dateText); },
             // Monday (first day of the week) disabled. Remove these lines 
-		    beforeShowDay: function(date) {
-		        var day = date.getDay();
-		        return [(day != 1), ''];
-		    },
+
+			//beforeShowDay: function(date) {
+		    //    var day = date.getDay();
+		    //    return [(day != 1), ''];
+		    //},
+            
             // end disabled
 		    minDate: 0
 		});

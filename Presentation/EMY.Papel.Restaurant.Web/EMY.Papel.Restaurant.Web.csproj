@@ -10,7 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <Content Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <EmbeddedResource Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <None Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="jQuery" Version="3.6.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Antiforgery" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,8 +35,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Models\" />
     <Folder Include="wwwroot\Themes\FooresRestaurant\" />
-    <Folder Include="wwwroot\Uploads\Photos\Thumbnails\" />
     <Folder Include="wwwroot\Uploads\Photos\" />
   </ItemGroup>
 

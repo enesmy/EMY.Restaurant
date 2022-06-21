@@ -1,5 +1,4 @@
-﻿using EMY.Papel.Restaurant.Core.Application.Repositories.PasswordHistoryRepositories;
-using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRepositories;
+﻿using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.UserGroupRoleRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.UserRepositories;
 using EMY.Papel.Restaurant.Core.Domain.Common;
@@ -38,7 +37,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserRepos
             {
                 result.Message = "Hidden answer is not correct!";
                 return result;
-            }           
+            }
             result.Value = prf;
             result.Message = "You can use this password!";
             result.IsSuccess = true;

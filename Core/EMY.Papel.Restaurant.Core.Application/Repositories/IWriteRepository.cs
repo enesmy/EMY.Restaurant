@@ -1,5 +1,4 @@
-﻿using EMY.Papel.Restaurant.Core.Domain.Common;
-using EMY.Papel.Restaurant.Core.Domain.Entities;
+﻿using EMY.Papel.Restaurant.Core.Domain.Entities;
 using System.Linq.Expressions;
 
 namespace EMY.Papel.Restaurant.Core.Application.Repositories
@@ -9,7 +8,7 @@ namespace EMY.Papel.Restaurant.Core.Application.Repositories
         Task<int> AddAsync(TEntity entity, Guid creater);
         Task<int> AddRangeAsync(IList<TEntity> entitiesy, Guid creater);
 
-        Task<int> UpdateAsync(TEntity entity,Guid updater);
+        Task<int> UpdateAsync(TEntity entity, Guid updater);
         Task<int> UpdateRangeAsync(IList<TEntity> entities, Guid updater);
 
 

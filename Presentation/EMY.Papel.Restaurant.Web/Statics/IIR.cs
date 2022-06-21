@@ -1,6 +1,5 @@
 ﻿
 using EMY.Papel.Restaurant.Core.Domain.Common;
-using System;
 
 public static class IIR
 {

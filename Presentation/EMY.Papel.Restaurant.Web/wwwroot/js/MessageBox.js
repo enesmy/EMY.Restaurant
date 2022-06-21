@@ -39,22 +39,16 @@
         });
     }
 
-    static AjaxPost(pageUrl, parameters) {
+    static AjaxPost(pageUrl, parameters,success,error) {
         let htmlContent = "";
         $.ajax({
             url: pageUrl,
             type: "POST",
             data: parameters,
-            success: function (data) {
-                MessageBox.ShowMessage(data);
-            },
-            error: function (data) {
-                MessageBox.ShowMessage("Error: " + data.statusText);
-            }
-
+            success: success,
+            error: error
         });
     }
-
 
     static ShowMessage(Message) {
         document.getElementById('messageboxModalLabel').textContent = document.title;
@@ -64,8 +58,8 @@
         $("#MessageboxModal").modal('show');
     }
 
-    static AskYesNo(Header, Message, YesMethod, NoMethod) {
-
+    static AskYesNo(Header, Message, YesMethod, NoMethod)
+    {
         document.getElementById('messageboxModalLabel').textContent = Header;
         document.getElementById('messageboxModalContent').textContent = Message;
         this.IsQuestion(true);
@@ -87,6 +81,7 @@
         document.getElementById('modalYes').hidden = !answer;
         document.getElementById('modalNo').hidden = !answer;
         document.getElementById('modalClose').hidden = answer;
+        document.getElementById('modalSave').hidden = true;
         this.clear();
     }
 

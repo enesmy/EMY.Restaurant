@@ -7,7 +7,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Common
         public ResultModel()
         {
             IsSuccess = false;
-            Message = "";     
+            Message = "";
         }
         public bool IsSuccess { get; set; }
         public int resultType { get; set; }

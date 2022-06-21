@@ -6,14 +6,19 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
     public static partial class CredentialInformationConfiguration
     {
 
+        static ConfigurationManager _configurationManager;
         static ConfigurationManager configuration
         {
             get
             {
-                ConfigurationManager conf = new();
-                conf.SetBasePath(Directory.GetCurrentDirectory());
-                conf.AddJsonFile(ConfigFileLocation);
-                return conf;
+                if (_configurationManager == null)
+                {
+                    _configurationManager = new();
+                    _configurationManager.SetBasePath(Directory.GetCurrentDirectory());
+                    _configurationManager.AddJsonFile(ConfigFileLocation);
+                }
+
+                return _configurationManager;
             }
         }
 

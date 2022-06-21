@@ -8,12 +8,6 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
     {
         [Key]
         public Guid MailListID { get; set; }
-        public string Name { get; set; }
         public string Email { get; set; }
-        public string Phone { get; set; }
-        public string Message { get; set; }
-        public DateTime Date { get; set; }
-        public bool IsRead { get; set; }
-        public bool IsAuthorized { get; set; }
     }
 }

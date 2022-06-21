@@ -12,7 +12,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.MenuCateg
 
         public async Task<List<MenuCategory>> GetAllMenuCategoryWithMenus()
         {
-          return  await GetWhere(o => !o.IsDeleted).Include(o => o.Menus).ToListAsync();
+            return await GetWhere(o => !o.IsDeleted).Include(o => o.Menus).ToListAsync();
         }
     }
 }

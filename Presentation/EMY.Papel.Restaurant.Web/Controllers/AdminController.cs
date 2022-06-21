@@ -1,4 +1,5 @@
 ﻿using EMY.Papel.Restaurant.Core.Application.Abstract;
+using EMY.Papel.Restaurant.Core.Application.Repositories.MailListRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuCategoryRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.MenuRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.OrderRepositories;
@@ -6,9 +7,11 @@ using EMY.Papel.Restaurant.Core.Application.Repositories.PhotoRepositories;
 using EMY.Papel.Restaurant.Core.Application.Repositories.ReservationRepositories;
 using EMY.Papel.Restaurant.Core.Domain.Common;
 using EMY.Papel.Restaurant.Core.Domain.Entities;
+using EMY.Papel.Restaurant.Core.Domain.ViewModels;
 using EMY.Papel.Restaurant.Infrastructure.Persistence;
 using EMY.Papel.Restaurant.Web.Statics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Drawing;
 
 namespace EMY.Papel.Restaurant.Web.Controllers
@@ -16,9 +19,10 @@ namespace EMY.Papel.Restaurant.Web.Controllers
     public class AdminController : Controller
     {
 
-
+        private Microsoft.AspNetCore.Hosting.IHostingEnvironment Environment;
+        private readonly IMailListReadRepository _mailListRead;
         private readonly IReservationReadRepository _reservationRead;
-        private readonly IBasketReadRepository _basketRead;
+        private readonly IOrderReadRepository _basketRead;
         private readonly IPhotoWriteRepository _photoWrite;
         private readonly IMenuReadRepository _menuRead;
         private readonly IMenuWriteRepository _menuWrite;
@@ -26,8 +30,9 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         private readonly IEmailService _mailSystem;
         private readonly IMenuCategoryReadRepository _menuCategoryRead;
         private readonly IMenuCategoryWriteRepository _menuCategoryWrite;
+        private readonly IMailListWriteRepository _mailListWrite;
 
-        public AdminController(IReservationReadRepository reservationRead, IBasketReadRepository basketRead, IPhotoWriteRepository photoWrite, IMenuReadRepository menuRead, IMenuWriteRepository menuWrite, IReservationWriteRepository reservationWrite, IMenuCategoryReadRepository menuCategoryRead, IEmailService mailSystem, IMenuCategoryWriteRepository menuCategoryWrite)
+        public AdminController(IReservationReadRepository reservationRead, IOrderReadRepository basketRead, IPhotoWriteRepository photoWrite, IMenuReadRepository menuRead, IMenuWriteRepository menuWrite, IReservationWriteRepository reservationWrite, IMenuCategoryReadRepository menuCategoryRead, IEmailService mailSystem, IMenuCategoryWriteRepository menuCategoryWrite, Microsoft.AspNetCore.Hosting.IHostingEnvironment environment, IMailListWriteRepository mailListWrite, IMailListReadRepository mailListRead)
         {
             _reservationRead = reservationRead;
             _basketRead = basketRead;
@@ -38,9 +43,12 @@ namespace EMY.Papel.Restaurant.Web.Controllers
             _menuCategoryRead = menuCategoryRead;
             _mailSystem = mailSystem;
             _menuCategoryWrite = menuCategoryWrite;
+            Environment = environment;
+            _mailListWrite = mailListWrite;
+            _mailListRead = mailListRead;
         }
 
-        public async Task<IActionResult> Dashboard()
+        public async Task<IActionResult> Index()
         {
 
             var reservationstats = _reservationRead.GetReservationStats();
@@ -64,48 +72,144 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         }
 
 
-        async Task<Photo> UploadImage(IFormFile file)
+        async Task<Photo> UploadImage(IFormFile file, int thumbWidth = 128, int thumbHeight = 128, bool generateThumb = true)
         {
-            if (file.ContentType == "image/jpeg")
+            if (file.ContentType.StartsWith("image"))
             {
-                Image image = Image.FromStream(file.OpenReadStream());
-
                 Photo photo = new Photo();
                 photo.PhotoID = Guid.NewGuid();
                 photo.FileName = file.FileName;
                 photo.Extention = System.IO.Path.GetExtension(file.FileName);
                 await _photoWrite.AddAsync(photo, this.ActiveUserID());
 
-                image.Save(photo.GetOrginalLocation);
-                Image thumb = image.GetThumbnailImage(128, 128, () => false, IntPtr.Zero);
-                thumb.Save(photo.GetThumbnailLocation);
+                MemoryStream memory = new MemoryStream();
+
+                await file.CopyToAsync(memory);
+
+                string wwwPath = this.Environment.WebRootPath;
+                string contentPath = this.Environment.ContentRootPath;
+                string path = Path.Combine(this.Environment.WebRootPath, "Uploads/Photos/");
+                string filePath = Path.Combine(path, photo.PhotoID + photo.Extention);
+                string filePathThumb = Path.Combine(path, photo.PhotoID + "_thumb" + photo.Extention);
+
+                Image image = Image.FromStream(memory);
+                image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+
+                if (generateThumb)
+                {
+                    var thumb = image.ResizeImage(new Size(thumbWidth, thumbHeight));
+                    thumb.Save(filePathThumb, System.Drawing.Imaging.ImageFormat.Png);
+                }
+
                 return photo;
             }
             return new Photo();
         }
+
         [HttpGet]
         public async Task<IActionResult> MenuCategory()
         {
             List<MenuCategory> menuCategory = await _menuCategoryRead.GetAllMenuCategoryWithMenus();
-
             return View(menuCategory);
         }
+
         [HttpPost]
-        public async Task<IActionResult> SaveCategory(string name, string description)
+        public async Task<IActionResult> SaveCategory(string MenuCategoryID, string name, string description, IFormFile headerPhoto, IFormFile logoPhoto)
         {
-            MenuCategory menuCategory = new MenuCategory()
+            string HeaderPhotoUrl = string.Empty;
+            Guid HeaderPhotoID = Guid.Empty;
+            if (headerPhoto != null)
             {
-                Description = description,
-                Name = name,
-                Active = true
-            };
-            await _menuCategoryWrite.AddAsync(menuCategory, this.ActiveUserID());
-            return Ok();
+                var uploadedHeaderPhoto = await UploadImage(headerPhoto);
+                HeaderPhotoUrl = uploadedHeaderPhoto.PhotoID.ToString() + uploadedHeaderPhoto.Extention; ;
+                HeaderPhotoID = uploadedHeaderPhoto.PhotoID;
+            }
+
+            string LogoPhotoUrl = string.Empty;
+            Guid LogoPhotoID = Guid.Empty;
+            if (logoPhoto != null)
+            {
+                var uploadedLogoPhoto = await UploadImage(logoPhoto);
+                LogoPhotoUrl = uploadedLogoPhoto.PhotoID.ToString() + uploadedLogoPhoto.Extention; ;
+                LogoPhotoID = uploadedLogoPhoto.PhotoID;
+            }
+
+            if (MenuCategoryID.ToGuid() == Guid.Empty)
+            {
+                MenuCategory menuCategory = new MenuCategory()
+                {
+                    Description = description,
+                    Name = name,
+                    Active = true,
+                    LogoPhotoID = LogoPhotoID,
+                    HeaderPhotoID = HeaderPhotoID,
+                    HeaderPhotoURL = HeaderPhotoUrl,
+                    LogoPhotoURL = LogoPhotoUrl
+                };
+                await _menuCategoryWrite.AddAsync(menuCategory, this.ActiveUserID());
+                return Ok();
+            }
+            else
+            {
+                MenuCategory menuCategory = await _menuCategoryRead.GetByIdAsync(MenuCategoryID.ToGuid());
+                if (menuCategory == null)
+                {
+                    return NotFound("Menu Category not found");
+                }
+
+                menuCategory.Description = description;
+                menuCategory.Name = name;
+                if (headerPhoto != null)
+                {
+                    menuCategory.HeaderPhotoID = HeaderPhotoID;
+                    menuCategory.HeaderPhotoURL = HeaderPhotoUrl;
+                }
+
+
+                if (logoPhoto != null)
+                {
+                    menuCategory.LogoPhotoID = LogoPhotoID;
+                    menuCategory.LogoPhotoURL = LogoPhotoUrl;
+                }
+                await _menuCategoryWrite.UpdateAsync(menuCategory, this.ActiveUserID());
+                return Ok();
+            }
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> CreateCategory()
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCategory(string MenuCategoryID)
         {
+            MenuCategory menuCategory = await _menuCategoryRead.GetByIdAsync(MenuCategoryID.ToGuid());
+            if (menuCategory == null)
+            {
+                return NotFound("Menu Category not found");
+            }
+            await _menuCategoryWrite.RemoveAsync(menuCategory, this.ActiveUserID());
+            return Ok($"{menuCategory.Name} has been removed!");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteMenu(string MenuID)
+        {
+            Menu menu = await _menuRead.GetByIdAsync(MenuID.ToGuid());
+            if (menu == null)
+            {
+                return NotFound("Menu not found");
+            }
+            await _menuWrite.RemoveAsync(menu, this.ActiveUserID());
+            return Ok($"{menu.Name} has been removed!");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateOrEditCategory(string categoryid)
+        {
+            if (!string.IsNullOrEmpty(categoryid))
+            {
+                MenuCategory menuCategory = await _menuCategoryRead.GetByIdAsync(categoryid.ToGuid()) ?? new MenuCategory();
+                return PartialView(menuCategory);
+            }
+
+
             return PartialView(new MenuCategory());
         }
         [HttpGet]
@@ -116,22 +220,44 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveMenu(Menu menu, IFormFile file)
+        public async Task<IActionResult> SaveMenu(Menu menu, IFormFile photoContent)
         {
+            int result = 0;
+            if (photoContent != null)
+            {
+                var photo = await UploadImage(photoContent);
+                menu.PhotoID = photo.PhotoID;
+                menu.PhotoFileName = photo.PhotoID.ToString() + photo.Extention;
+                menu.PhotoThumbFileName = photo.PhotoID.ToString() + "_thumb" + photo.Extention;
+            }
+            if (menu.MenuID == Guid.Empty)
+                result = await _menuWrite.AddAsync(menu, this.ActiveUserID());
+            else
+                result = await _menuWrite.UpdateAsync(menu, this.ActiveUserID());
 
-            if (file != null)
-                menu.PhotoID = (await UploadImage(file)).PhotoID;
 
-            var result = await _menuWrite.AddAsync(menu, this.ActiveUserID());
             if (result > 0)
             {
                 return Ok(menu);
             }
             else
             {
-                return BadRequest();
+                return BadRequest("Samething went wrong!");
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateOrEditMenu(string MenuCategoryID, string MenuID = "")
+        {
+            var menu = new Menu();
+            menu.MenuCategoryID = Guid.Parse(MenuCategoryID);
+            if (!string.IsNullOrEmpty(MenuID))
+            {
+                menu = await _menuRead.GetByIdAsync(Guid.Parse(MenuID));
+            }
+            return PartialView("CreateOrEditMenu", menu);
+        }
+
         public async Task<IActionResult> GetMenuDetailsAsync(string MenuID)
         {
             var menu = await _menuRead.GetByIdAsync(Guid.Parse(MenuID));
@@ -139,13 +265,36 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         }
         public async Task<IActionResult> Reservations()
         {
-            List<Reservation> reservations = _reservationRead.GetReservations();
-            return View();
+            DateTime
+                Begindt = DateTime.Today.AddDays(-1),
+                Enddt = DateTime.Today.AddDays(1);
+
+            List<Reservation> reservations = await _reservationRead.Table.AsNoTracking().Where(o => !o.IsDeleted && o.Date >= Begindt && o.Date <= Enddt).ToListAsync();
+            ReservationPageResultViewModel result = new ReservationPageResultViewModel();
+            result.AuthorizedReservations = reservations.Where(o => o.ConfirmationStatus == ReservationConfirmationStatus.Confirmed).ToList();
+            result.UnAuthorizedReservations = reservations.Where(o => o.ConfirmationStatus == ReservationConfirmationStatus.Rejected).ToList();
+            result.Pendings = await _reservationRead.GetWhere(o => !o.IsDeleted && o.ConfirmationStatus == ReservationConfirmationStatus.Authorized).ToListAsync();
+            result.Begin = Begindt;
+            result.End = Enddt;
+            return View(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Reservations(DateTime Begin, DateTime End)
+        {
+            List<Reservation> reservations = await _reservationRead.Table.AsNoTracking().Where(o => !o.IsDeleted && o.Date >= Begin && o.Date <= End).ToListAsync();
+            ReservationPageResultViewModel result = new ReservationPageResultViewModel();
+            result.AuthorizedReservations = reservations.Where(o => o.ConfirmationStatus == ReservationConfirmationStatus.Confirmed).ToList();
+            result.UnAuthorizedReservations = reservations.Where(o => o.ConfirmationStatus == ReservationConfirmationStatus.Rejected).ToList();
+            result.Pendings = await _reservationRead.GetWhere(o => !o.IsDeleted && o.ConfirmationStatus == ReservationConfirmationStatus.Authorized).ToListAsync();
+            result.Begin = Begin;
+            result.End = End;
+            return View(result);
         }
 
-        public async Task<IActionResult> SetReservationStatusSettings(string ReservationID, ReservationConfirmationStatus status)
+        [HttpPost]
+        public async Task<IActionResult> SetReservationStatusSettings(string reservationid, ReservationConfirmationStatus status)
         {
-            var reservation = await _reservationRead.GetByIdAsync(Guid.Parse(ReservationID));
+            var reservation = await _reservationRead.GetByIdAsync(reservationid.ToGuid());
             if (reservation == null)
             {
                 return NotFound("Reservation not found!");
@@ -191,6 +340,24 @@ namespace EMY.Papel.Restaurant.Web.Controllers
 
             await _mailSystem.SendEmail(reservation.Email, $"{Configuration.SystemName} Reservation Confirmation", $"Your reservation has been {confirmationMessage}", System.Net.Mail.MailPriority.High);
             return View(reservation);
+        }
+
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddMailList(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Email is required!");
+            }
+            var mail = _mailListRead.Get(o => o.Email == email && !o.IsDeleted);
+            if (mail == null)
+            {
+                await _mailListWrite.AddAsync(new MailList() { Email = email }, Guid.Empty);
+
+                return Ok();
+            }
+            else
+                return BadRequest("Email already exists!");
         }
     }
 }

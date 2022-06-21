@@ -4,7 +4,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
 {
     public static class Configuration
     {
-       internal static string ConnectionString
+   
+        
+        internal static string ConnectionString
         {
             get
             {

@@ -13,20 +13,6 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string Extention { get; set; }
 
 
-        public virtual string GetOrginalLocation
-        {
-            get
-            {
-                return Path.Combine(SystemStatics.GetCurrentPhotoArchiveLocation(), PhotoID + "." + Extention);
-            }
-        }
 
-        public virtual string GetThumbnailLocation
-        {
-            get
-            {
-                return Path.Combine(SystemStatics.GetCurrentPhotoThumbnailLocation(), PhotoID + "." + Extention);
-            }
-        }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace EMY.Papel.Restaurant.Core.Domain.Common
+﻿namespace EMY.Papel.Restaurant.Core.Domain.Common
 {
     public static class AuthTypeHelper
     {

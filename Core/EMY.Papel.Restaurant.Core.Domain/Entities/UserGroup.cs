@@ -14,7 +14,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public bool DefaultUserGroup { get; set; }
         public ICollection<UserGroupRole> Roles { get; set; }
         public bool IsActive { get; set; }
-        
+
         public string GetGroupName() => $"{UserGroupName} ({UserGroupCode})";
     }
 }

@@ -14,8 +14,7 @@
             <i class="fas fa-fingerprint"></i>
         </dt>
         <dd class="col-sm-10">
-
-            @Model.UserID.ToString().Substring(0,6)
+          @Html.DisplayFor(o=> Model.UserID)
         </dd>
         <dt class="col-sm-2">
             Name

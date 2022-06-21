@@ -19,6 +19,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.UserGroup
             return _userGroupRoleReadRepository.GetWhere(o => o.UserGroupID == userGroupID.ToGuid() && !o.IsDeleted, false).ToList();
         }
 
-   
+
     }
 }

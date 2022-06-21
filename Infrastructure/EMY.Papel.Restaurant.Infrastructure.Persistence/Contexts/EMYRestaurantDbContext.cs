@@ -18,8 +18,9 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Contexts
         public DbSet<User> Users { get; set; }
         public DbSet<UserGroup> UserGroups { get; set; }
         public DbSet<UserGroupRole> UserGroupRoles { get; set; }
-        public DbSet<Basket> Baskets { get; set; }
-        public DbSet<BasketItem> BasketItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {

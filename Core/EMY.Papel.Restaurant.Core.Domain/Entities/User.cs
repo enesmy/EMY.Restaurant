@@ -16,7 +16,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string Email { get; set; }
         [Phone]
         public string Phone { get; set; }
-        
+
         [DefaultValue(0)]
         public UserStatus UserStatus { get; set; }
         public Guid UserGroupID { get; set; }

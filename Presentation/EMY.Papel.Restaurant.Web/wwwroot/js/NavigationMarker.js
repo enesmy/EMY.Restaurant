@@ -6,6 +6,7 @@
         $("#layoutSidenav_nav .sb-sidenav a.nav-link").each(function () {
             if(path.startsWith(this.href)) {
                 $(this).addClass("active");
+                console.log(this.href);
             }
         });
 

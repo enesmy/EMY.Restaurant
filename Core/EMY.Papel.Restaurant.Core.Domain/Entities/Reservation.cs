@@ -8,7 +8,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
     public class Reservation : BaseEntity
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid ReservationID { get; set; }
         public DateTime Date { get; set; }
         public int NumberOfPeople { get; set; }
         public string Name { get; set; }

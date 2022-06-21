@@ -154,9 +154,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("CreatorID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
@@ -167,29 +164,11 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAuthorized")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsRead")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LastUpdaterID")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -225,10 +204,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Image")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -242,8 +217,16 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhotoFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("PhotoID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("PhotoThumbFileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
@@ -260,7 +243,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.MenuCategory", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("MenuCategoryID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -283,11 +266,25 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("HeaderPhotoID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("HeaderPhotoURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LastUpdaterID")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LogoPhotoID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("LogoPhotoURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -296,14 +293,54 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("MenuCategoryID");
 
                     b.ToTable("tblMenuCategory", "menu");
                 });
 
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Photo", b =>
+                {
+                    b.Property<Guid>("PhotoID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeleterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Extention")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdaterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("PhotoID");
+
+                    b.ToTable("tblPhoto", "dbo");
+                });
+
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Reservation", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("ReservationID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -353,7 +390,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.HasKey("ReservationID");
 
                     b.ToTable("tblReservations", "reservation");
                 });

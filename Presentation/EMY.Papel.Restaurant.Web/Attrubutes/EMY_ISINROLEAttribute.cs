@@ -2,7 +2,6 @@
 using EMY.Papel.Restaurant.Core.Domain.Common;
 using EMY.Papel.Restaurant.Web.Statics;
 using Microsoft.AspNetCore.Authorization;
-using System;
 /// <summary>
 /// Specifies that the class or method that this attribute is applied to requires role-based authorization. <br />
 /// To authorize users with either role A or role B, use:
@@ -40,5 +39,5 @@ public class EMY_ISINROLEAttribute : AuthorizeAttribute
         AuthenticationSchemes = SystemMainStatics.DefaultScheme;
     }
 
-   
+
 }

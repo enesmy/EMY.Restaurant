@@ -391,15 +391,15 @@ a.btn_play:hover {
   z-index: 99;
 }
 .frame.white {
-  background: url(../img/frame_white.png) 0 0 repeat-x;
+  background: url(/Themes/FooresRestaurant/img/frame_white.png) 0 0 repeat-x;
   background-size: 10px 3px;
 }
 .frame.gray {
-  background: url(../img/frame_gray.png) 0 0 repeat-x;
+  background: url(/Themes/FooresRestaurant/img/frame_gray.png) 0 0 repeat-x;
   background-size: 10px 3px;
 }
 .frame.black {
-  background: url(../img/frame_footer.png) 0 0 repeat-x;
+  background: url(/Themes/FooresRestaurant/img/frame_footer.png) 0 0 repeat-x;
   background-size: 10px 3px;
   top: -3px;
 }
@@ -1224,7 +1224,7 @@ ul#top_menu li a.search-overlay-menu-btn:before {
 }
 .hero_single.version_2 .opacity-mask h1:before,
 .hero_single.version_2 .opacity-mask h3:before {
-  content: url("../img/divider.svg");
+  content: url("/Themes/FooresRestaurant/img/divider.svg");
   display: block;
   margin-bottom: 15px;
 }
@@ -1263,7 +1263,7 @@ ul#top_menu li a.search-overlay-menu-btn:before {
   }
 }
 .hero_single.inner_pages h1:before {
-  content: url("../img/divider.svg");
+  content: url("/Themes/FooresRestaurant/img/divider.svg");
   display: block;
   margin-bottom: 15px;
 }
@@ -1435,7 +1435,7 @@ ul#top_menu li a.search-overlay-menu-btn:before {
   position: absolute;
   right: 20px;
   bottom: 20px;
-  background: url(../img/drag_icon.svg) 0 0 no-repeat;
+  background: url(/Themes/FooresRestaurant/img/drag_icon.svg) 0 0 no-repeat;
   width: 50px;
   height: 30px;
   opacity: 0.6;
@@ -1635,7 +1635,7 @@ ul#banners_grid li a.img_container .short_info p {
 
 @media (max-width: 1024px) {
   #hero_video {
-    background: #ededed url(../img/slides/slide_home_1.jpg) center center no-repeat;
+    background: #ededed url(/Themes/FooresRestaurant/img/slides/slide_home_1.jpg) center center no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;
@@ -2515,7 +2515,7 @@ ul#banners_grid li a.img_container .short_info p {
   font-size: 24px;
 }
 .payment_select#paypal {
-  background: #f0f0f0 url(../img/paypal_2.svg) center right no-repeat;
+  background: #f0f0f0 url(/Themes/FooresRestaurant/img/paypal_2.svg) center right no-repeat;
 }
 
 /* Confirm page */
@@ -2748,7 +2748,7 @@ iframe.map_contact {
   margin-right: 3px;
   width: 37px;
   height: 37px;
-  background: url(../img/stars.svg) 0 -38px;
+  background: url(/Themes/FooresRestaurant/img/stars.svg) 0 -38px;
 }
 
 /*============================================================================================*/
@@ -2837,11 +2837,11 @@ iframe.map_contact {
   background-color: #f4f4f4;
 }
 .bg_gray.pattern {
-  background: #f4f4f4 url(../img/pattern_2.svg) repeat;
+  background: #f4f4f4 url(/Themes/FooresRestaurant/img/pattern_2.svg) repeat;
 }
 
 .pattern_2 {
-  background: url(../img/pattern_menu.jpg) no-repeat center center;
+  background: url(/Themes/FooresRestaurant/img/pattern_menu.jpg) no-repeat center center;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -3281,30 +3281,30 @@ footer .copy {
   -moz-box-shadow: none;
   box-shadow: none;
 }
-#newsletter button[type='submit'] {
-  position: absolute;
-  right: 0;
-  color: #fff;
-  font-size: 24px;
-  font-size: 1.5rem;
-  top: 0;
-  border: 0;
-  opacity: 1;
-  padding: 0 10px;
-  height: 40px;
-  line-height: 44px;
-  cursor: pointer;
-  -webkit-border-radius: 0 3px 3px 0;
-  -moz-border-radius: 0 3px 3px 0;
-  -ms-border-radius: 0 3px 3px 0;
-  border-radius: 0 3px 3px 0;
-  background-color: #978667;
-  -moz-transition: all 0.3s ease-in-out;
-  -o-transition: all 0.3s ease-in-out;
-  -webkit-transition: all 0.3s ease-in-out;
-  -ms-transition: all 0.3s ease-in-out;
-  transition: all 0.3s ease-in-out;
-  outline: none;
+#newsletter button[id='submit-newsletter'] {
+    position: absolute;
+    right: 0;
+    color: #fff;
+    font-size: 24px;
+    font-size: 1.5rem;
+    top: 0;
+    border: 0;
+    opacity: 1;
+    padding: 0 10px;
+    height: 40px;
+    line-height: 44px;
+    cursor: pointer;
+    -webkit-border-radius: 0 3px 3px 0;
+    -moz-border-radius: 0 3px 3px 0;
+    -ms-border-radius: 0 3px 3px 0;
+    border-radius: 0 3px 3px 0;
+    background-color: #978667;
+    -moz-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    outline: none;
 }
 #newsletter button[type='submit']:hover {
   -webkit-filter: brightness(115%);
@@ -3957,7 +3957,7 @@ footer .copy {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: #665b46 url(../img/pattern.svg) repeat;
+  background: #665b46 url(/Themes/FooresRestaurant/img/pattern.svg) repeat;
   color: #fff;
 }
 @media (max-width: 767px) {

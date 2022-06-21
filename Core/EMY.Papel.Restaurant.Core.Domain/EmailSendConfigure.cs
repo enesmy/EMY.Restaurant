@@ -1,5 +1,4 @@
 ﻿using System.Net.Mail;
-using System.Security;
 
 namespace EMY.Papel.Restaurant.Core.Domain
 {
