@@ -22,16 +22,16 @@
                 <span asp-validation-for="End" class="text-danger"></span>
             </div>
         </div>
-      
+
     </div>
-     <input class="btn btn-success btn-sm" type="submit" value="Search">
+    <input class="btn btn-success btn-sm" type="submit" value="Search">
 </form>
 
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Pendings</button>
-        <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-authorized" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Authorized</button>
-        <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-unauthorized" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Unauthorized</button>
+        <button class="nav-link active" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending" type="button" role="tab" aria-controls="nav-home" aria-selected="true">Pendings</button>
+        <button class="nav-link" id="nav-authorized-tab" data-bs-toggle="tab" data-bs-target="#nav-authorized" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">Authorized</button>
+        <button class="nav-link" id="nav-unauthorized-tab" data-bs-toggle="tab" data-bs-target="#nav-unauthorized" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Unauthorized</button>
     </div>
 </nav>
 
@@ -133,30 +133,46 @@
 </div>
 <script>
     function ChangeStatus(status, reservationid) {
-        $.ajax({
-            url: '/Reservation/SetReservationStatusSettings',
-            type: 'POST',
-            data:
-            {
-                status: status,
-                reservationid: reservationid
-            },
-            success: function(data) {
-                if (data.status == 1) {
-                    location.reload();
-                } else if (data.status == 2) {
-                    location.reload();
-                } else if (data.status == 3) {
-                    location.reload();
-                } else if (data.status == 4) {
-                    location.reload();
-                } else if (data.status == 5) {
-                    location.reload();
-                }
-            },
-            error: function(data) {
-                MessageBox.ShowMessage('Error:' + data.responseText);
+        QuestionMessage = "";
+
+        switch (status) {
+
+            case 1:
+                QuestionMessage = "Are you sure you want to send this reservation to authorized?";
+                break;
+            case 2:
+                QuestionMessage = "Are you sure you want to confirm this reservation?";
+                break;
+            case 3:
+                QuestionMessage = "Are you sure you want to reject this reservation?";
+                break;
+            case 4:
+                QuestionMessage = "Are you sure you want to complated this reservation?";
+                break;
+            case 5:
+                QuestionMessage = "Are you sure they did not come for this reservation?";
+                break;
+        }
+
+
+        MessageBox.AskYesNo('Status', QuestionMessage,
+            function() {
+                $.ajax({
+                    url: '/Admin/SetReservationStatusSettings',
+                    type: 'POST',
+                    data:
+                    {
+                        status: status,
+                        reservationid: reservationid
+                    },
+                    success: function(data) {
+                        location.reload();
+                    },
+                    error: function(data) {
+                        MessageBox.ShowMessage('Error:' + data.responseText);
+                    }
+                })
             }
-        }
-        }
+            , null);
+    }
 </script>

@@ -9,12 +9,13 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         [Key]
         public Guid OrderItemID { get; set; }
         public Guid OrderID { get; set; }
-        [ForeignKey("BasketID")] public Order Order { get; set; }
+        [ForeignKey("OrderID")] public Order Order { get; set; }
         public Guid MenuID { get; set; }
         public string MenuText { get; set; }
         public int ItemCount { get; set; }
         public decimal ItemPrice { get; set; }
         public virtual Decimal TotalPrice { get { return Math.Round(ItemCount * ItemPrice, 2); } }
+        public bool IsSuccess { get; set; }
 
     }
 }

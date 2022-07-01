@@ -178,8 +178,7 @@ function reloadShopCart() {
         document.getElementById("tbdy").innerHTML += obj;
     });
     document.getElementById('summarysubtotal').textContent = '€' + totalprice;
-    document.getElementById('summarydeliveryfee').textContent = '€' + 7.0;
-    document.getElementById('summarytotalprice').textContent = '€' + (totalprice + 7.0);
+    document.getElementById('summarytotalprice').textContent = '€' + (totalprice);
     loadHeaderOrder();
 }
 function loadHeaderOrder() {
@@ -236,8 +235,7 @@ function loadCheckOutPage() {
     });
 
     document.getElementById("summarySubtotal").textContent = '€' + totalBasketPrice;
-    document.getElementById("summaryDeliveryFee").textContent = '€' + 7.0;
-    document.getElementById("summaryTotal").textContent = '€' + (totalBasketPrice + 7.0);
+    document.getElementById("summaryTotal").textContent = '€' + totalBasketPrice;
 
 }
 
@@ -249,44 +247,65 @@ function confirmOrder() {
         basketItems = JSON.parse(cookieItems);
 
     var products = [];
-
+    if (basketItems.length == 0) {
+        MessageBox.Show('Error.', 'Please add products to your basket.');
+    }
     basketItems.forEach(function (item) {
         products.push({ productid: item.productid, count: item.count });
-        removeBasketItem(item.productid);
     });
-    var name_card_order = document.getElementById('name_card_order').value;
-    var card_number = document.getElementById('card_number').value;
-    var expire_month = document.getElementById('expire_month').value;
-    var expire_year = document.getElementById('expire_year').value;
-    var ccv = document.getElementById('ccv').value;
+
     var constradioButtons = document.querySelectorAll('input[name="payment_method"]');
     var payment_method = 'CCard';
-    constradioButtons.forEach(function (rb) { selectedValue = rb.value; });
+    constradioButtons.forEach(function (rb) { if (rb.checked) payment_method = rb.value; });
+
+
 
     var fullName = document.getElementById('fullName').value;
+    if (fullName.length == 0) {
+        MessageBox.Show('Error', 'Please fill your full name.');
+        return;
+    }
     var email = document.getElementById('email').value;
     var phone = document.getElementById('phone').value;
+    var notes = document.getElementById('notes').value;
+    if (phone.length == 0) {
+        MessageBox.Show('Error', 'Please fill your phone number.');
+        return;
+    }
     var fullAdress = document.getElementById('fullAdress').value;
+    if (fullAdress.length == 0) {
+        MessageBox.Show('Error', 'Please fill your full adress.');
+        return;
+    }
     var city = document.getElementById('city').value;
+    if (city.length == 0) {
+        MessageBox.Show('Error', 'Please fill your city.');
+        return;
+    }
+
     var postalCode = document.getElementById('postalCode').value;
+    if (postalCode.length == 0) {
+        MessageBox.Show('Error', 'Please fill your postal code.');
+        return;
+    }
 
     MessageBox.AjaxPost('/Home/CreateOrder',
         {
-            products: products,
-            name_card_order: name_card_order,
-            card_number: card_number,
-            expire_month: expire_month,
-            expire_year: expire_year,
-            ccv: ccv,
+            productsJson: JSON.stringify(products),
             payment_method: payment_method,
             fullName: fullName,
             email: email,
             phone: phone,
             fullAdress: fullAdress,
             city: city,
-            postalCode: postalCode
+            postalCode: postalCode,
+            notes: notes
         },
         function (data) {
+            basketItems.forEach(function (item) {
+                removeBasketItem(item.productid);
+            });
+            console.log('data=', data)
             location.href = 'Confirmation?id=' + data;
         }, function (data) {
             MessageBox.Show('Error creating order', 'error');

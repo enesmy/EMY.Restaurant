@@ -6,6 +6,7 @@
         Account = 2,
         Reservation_Management = 3,
         OrderManagement = 4,
-        Report = 5
+        Report = 5,
+        MenuDesign = 6
     }
 }

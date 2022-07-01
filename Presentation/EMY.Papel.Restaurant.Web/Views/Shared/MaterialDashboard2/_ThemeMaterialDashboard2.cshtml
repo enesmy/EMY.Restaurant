@@ -35,6 +35,9 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <!-- CSS Files -->
     <link id="pagestyle" href="/Themes/MaterialDashboard2/css/material-dashboard.css?v=3.0.2" rel="stylesheet" />
+
+
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -66,6 +69,14 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link text-white" asp-controller="Admin" asp-action="Order">
+                        <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                            <i class="material-icons opacity-10">table_view</i>
+                        </div>
+                        <span class="nav-link-text ms-1">Orders</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Admin" asp-action="MenuCategory">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons opacity-10">table_view</i>
@@ -76,7 +87,7 @@
                 <li class="nav-item mt-3">
                     <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
                 </li>
-                     <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Account" asp-action="UserList">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-users fa-solid fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -84,7 +95,7 @@
                         <span class="nav-link-text ms-1">Users</span>
                     </a>
                 </li>
-                 <li class="nav-item">
+                <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Account" asp-action="MyProfile">
                         <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-user fa-solid fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -259,6 +270,9 @@
     <!--   Core JS Files   -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/Themes/MaterialDashboard2/js/core/bootstrap.min.js"></script>
+   
+ 
+
     <script src="~/Themes/MaterialDashboard2/js/core/popper.min.js"></script>
     <script src="~/Themes/MaterialDashboard2/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="~/Themes/MaterialDashboard2/js/plugins/smooth-scrollbar.min.js"></script>
@@ -275,7 +289,7 @@
 
         function eleman(element) {
 
-            if (path==element.href) {
+            if (path == element.href) {
                 element.className = "nav-link text-white active bg-gradient-primary";
             }
         }
@@ -288,11 +302,12 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
 
-
+       
 
     </script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="~/Themes/MaterialDashboard2/js/material-dashboard.min.js?v=3.0.2"></script>
+
 </body>
 
 </html>

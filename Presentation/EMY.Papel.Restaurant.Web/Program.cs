@@ -6,10 +6,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddPersistanceServices();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    // Cookie settings
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+
+    options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/Login";
+    options.SlidingExpiration = true;
+});
+
 builder.Services.AddAuthentication(SystemMainStatics.DefaultScheme)
              .AddCookie(SystemMainStatics.DefaultScheme, options =>
              {
                  options.LoginPath = new PathString("/Account/Login");
+                 options.AccessDeniedPath = "/Account/Login";
              });
 
 var app = builder.Build();
@@ -18,7 +31,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+   
     app.UseHsts();
 }
 

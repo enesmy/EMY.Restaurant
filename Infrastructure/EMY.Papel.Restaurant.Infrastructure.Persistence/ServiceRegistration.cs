@@ -39,6 +39,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence
             services.AddPersistanceServicesReads();
             services.AddPersistanceServicesWrites();
             services.AddScoped<IEmailService, EmailManager>();
+            services.AddScoped<IDatabaseFactory, DatabaseFactory>();
 
         }
         public static void AddPersistanceServicesReads(this IServiceCollection services)

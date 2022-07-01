@@ -16,13 +16,13 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Repositories.BasketRep
 
             var today = GetWhere(o =>
             o.CreatedAt.Date == DateTime.Today.Date &&
-            o.IsAuthorized != Core.Domain.Common.BasketAuthorizeStatus.Pending &&
-            o.IsAuthorized != Core.Domain.Common.BasketAuthorizeStatus.Rejected
+            o.OrderStatus != Core.Domain.Common.OrderStatus.Pending &&
+            o.OrderStatus != Core.Domain.Common.OrderStatus.Canceled
             , false);
             var yesterday = GetWhere(o =>
         o.CreatedAt.Date == DateTime.Today.AddDays(-1) &&
-        o.IsAuthorized != Core.Domain.Common.BasketAuthorizeStatus.Pending &&
-        o.IsAuthorized != Core.Domain.Common.BasketAuthorizeStatus.Rejected
+        o.OrderStatus != Core.Domain.Common.OrderStatus.Pending &&
+        o.OrderStatus != Core.Domain.Common.OrderStatus.Canceled
         , false);
 
 

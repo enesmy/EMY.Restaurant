@@ -14,6 +14,7 @@ namespace EMY.Papel.Restaurant.Core.Domain.Entities
         public string Name { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        
         public string Message { get; set; }
         public ReservationConfirmationStatus ConfirmationStatus { get; set; }
     }

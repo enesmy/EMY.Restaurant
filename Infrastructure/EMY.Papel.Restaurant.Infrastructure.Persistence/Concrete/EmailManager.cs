@@ -9,6 +9,7 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Concrete
 
         public async Task<(bool IsSuccess, string Message)> SendEmail(string email, string subject, string message, MailPriority mailPriority)
         {
+            if (string.IsNullOrWhiteSpace(email)) return (false, "Email is empty!");
             EmailSendConfigure emailConfig = new EmailSendConfigure()
             {
                 From = CredentialInformationConfiguration.MailAdress,

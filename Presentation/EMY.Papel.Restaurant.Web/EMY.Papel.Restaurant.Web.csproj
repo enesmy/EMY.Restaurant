@@ -10,9 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\DataTables\**" />
     <Compile Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <Content Remove="wwwroot\DataTables\**" />
     <Content Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <EmbeddedResource Remove="wwwroot\DataTables\**" />
     <EmbeddedResource Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
+    <None Remove="wwwroot\DataTables\**" />
     <None Remove="wwwroot\Uploads\Photos\Thumbnails\**" />
   </ItemGroup>
 
@@ -36,8 +40,13 @@
 
   <ItemGroup>
     <Folder Include="Models\" />
-    <Folder Include="wwwroot\Themes\FooresRestaurant\" />
     <Folder Include="wwwroot\Uploads\Photos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\Themes\FooresRestaurant\css\WhatsappButton.scss">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

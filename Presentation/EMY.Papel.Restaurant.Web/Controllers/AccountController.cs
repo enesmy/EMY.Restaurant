@@ -4,6 +4,7 @@ using EMY.Papel.Restaurant.Core.Application.Repositories.UserRepositories;
 using EMY.Papel.Restaurant.Core.Domain.Common;
 using EMY.Papel.Restaurant.Core.Domain.Entities;
 using EMY.Papel.Restaurant.Core.Domain.ViewModels;
+using EMY.Papel.Restaurant.Infrastructure.Persistence;
 using EMY.Papel.Restaurant.Web.Statics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -15,28 +16,15 @@ namespace EMY.Papel.Restaurant.Web.Controllers
 {
     public class AccountController : Controller
     {
-        IUserReadRepository _userReadRepository;
-        IUserWriteRepository _userWriteRepository;
-        IUserGroupReadRepository _userGroupReadRepository;
-        IUserGroupWriteRepository _userGroupWriteRepository;
-        IUserGroupRoleReadRepository _userGroupRoleReadRepository;
-        IUserGroupRoleWriteRepository _userGroupRoleWriteRepository;
+        
 
         const string ControllerName = "Account";
-
-        public AccountController(IUserReadRepository userReadRepository, IUserGroupReadRepository userGroupReadRepository, IUserWriteRepository userWriteRepository, IUserGroupWriteRepository userGroupWriteRepository, IUserGroupRoleReadRepository userGroupRoleReadRepository, IUserGroupRoleWriteRepository userGroupRoleWriteRepository)
+        IDatabaseFactory databaseFactory;
+        public AccountController(IDatabaseFactory databaseFactory)
         {
             this.ViewBag.FormName = ControllerName;
-            _userReadRepository = userReadRepository;
-            _userGroupReadRepository = userGroupReadRepository;
-            _userWriteRepository = userWriteRepository;
-            _userGroupWriteRepository = userGroupWriteRepository;
-            _userGroupRoleReadRepository = userGroupRoleReadRepository;
-            _userGroupRoleWriteRepository = userGroupRoleWriteRepository;
+            this.databaseFactory = databaseFactory;
         }
-
-
-
 
         [HttpGet]
         public IActionResult Index()
@@ -57,7 +45,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         {
             await CheckAdminUser(await CheckAdminRole());
 
-            var res = await _userReadRepository.CheckLoginProfile(login.UserName, login.Password);
+            var res = await databaseFactory.UserRead.CheckLoginProfile(login.UserName, login.Password);
             if (res.IsSuccess)
             {
                 var loggedinUser = res.Value;
@@ -68,7 +56,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
                     new Claim(ClaimTypes.Name, loggedinUser.UserID.ToString())
                 };
 
-                List<UserGroupRole> authList = await _userReadRepository.GetAllRoles(loggedinUser.UserID);
+                List<UserGroupRole> authList = await databaseFactory.UserRead.GetAllRoles(loggedinUser.UserID);
 
                 foreach (var role in authList)
                 {
@@ -115,7 +103,7 @@ namespace EMY.Papel.Restaurant.Web.Controllers
         async Task<Guid> CheckAdminRole()
         {
 #if DEBUG
-            var userGroups = _userGroupReadRepository.GetWhere(o => !o.IsDeleted);
+            var userGroups = databaseFactory.UserGroupRead.GetWhere(o => !o.IsDeleted);
             var adminGroup = userGroups.FirstOrDefault(o => !o.IsDeleted && o.UserGroupCode == ControllerName);
             if (adminGroup == null)
             {
@@ -125,14 +113,14 @@ namespace EMY.Papel.Restaurant.Web.Controllers
                     UserGroupName = ControllerName,
                     UserGroupToolTip = "Admin Group has all authorizes!"
                 };
-                await _userGroupWriteRepository.AddAsync(adminGroup, Guid.Empty);
+                await databaseFactory.UserGroupWrite.AddAsync(adminGroup, Guid.Empty);
                 var admingroupauthorize = new UserGroupRole()
                 {
                     AuthorizeType = AuthType.Full,
                     FormName = ControllerName,
                     UserGroupID = adminGroup.UserGroupID
                 };
-                await _userGroupRoleWriteRepository.AddAsync(admingroupauthorize, Guid.Empty);
+                await databaseFactory.UserGroupRoleWrite.AddAsync(admingroupauthorize, Guid.Empty);
 
             }
             return adminGroup.UserGroupID;
@@ -144,7 +132,7 @@ return Guid.Empty;
         async Task CheckAdminUser(Guid adminGroupID)
         {
 #if DEBUG
-            var adminEnesMY = await _userReadRepository.GetAsync(o => o.UserName == "EnesMY" && !o.IsDeleted);
+            var adminEnesMY = await databaseFactory.UserRead.GetAsync(o => o.UserName == "EnesMY" && !o.IsDeleted);
             if (adminEnesMY == null)
             {
 
@@ -170,7 +158,7 @@ return Guid.Empty;
 
 
                 };
-                await _userWriteRepository.AddAsync(adminProfile, Guid.Empty);
+                await databaseFactory.UserWrite.AddAsync(adminProfile, Guid.Empty);
 
             }
 #else
@@ -181,7 +169,7 @@ return;
         [Authorize(AuthenticationSchemes = SystemMainStatics.DefaultScheme)]
         public async Task<IActionResult> MyProfile()
         {
-            var user = await _userReadRepository.GetByIdAsync(this.ActiveUserID());
+            var user = await databaseFactory.UserRead.GetByIdAsync(this.ActiveUserID());
             if (user == null) Redirect("/Account/Login");
             return View(user);
         }
@@ -189,10 +177,10 @@ return;
         [Authorize(AuthenticationSchemes = SystemMainStatics.DefaultScheme), HttpPost]
         public async Task<IActionResult> ChangeMyPassword(string newPassword, string hiddenQuestionAnswer)
         {
-            ResultModel<User> me = await _userReadRepository.CanIChangePassword(this.ActiveUserID(), newPassword, hiddenQuestionAnswer);
+            ResultModel<User> me = await databaseFactory.UserRead.CanIChangePassword(this.ActiveUserID(), newPassword, hiddenQuestionAnswer);
             if (me.IsSuccess)
             {
-                var result = await _userWriteRepository.ChangePassword(this.ActiveUserID(), newPassword, hiddenQuestionAnswer);
+                var result = await databaseFactory.UserWrite.ChangePassword(this.ActiveUserID(), newPassword, hiddenQuestionAnswer);
                 if (result.IsSuccess)
                     return Ok("Password changed!");
                 else return ValidationProblem(result.Message);
@@ -205,8 +193,8 @@ return;
         [EMY_ISINROLE(ControllerName, AuthType.Full)]
         public async Task<IActionResult> UserList()
         {
-            var userlist = _userReadRepository.GetWhere(o => !o.IsDeleted, false);
-            var userGroups = _userGroupReadRepository.GetWhere(o => !o.IsDeleted, false);
+            var userlist = databaseFactory.UserRead.GetWhere(o => !o.IsDeleted, false);
+            var userGroups = databaseFactory.UserGroupRead.GetWhere(o => !o.IsDeleted, false);
             var departmentList =
                 (from a in userGroups
                  select new SelectListItem
@@ -233,9 +221,9 @@ return;
         [EMY_ISINROLE(ControllerName, AuthType.Full)]
         public async Task<IActionResult> RoleManager(string UserGroupID)
         {
-            List<UserGroupRole> usergrouproles = _userGroupReadRepository.GetUserGroupRolesFromUserGroup(UserGroupID);
+            List<UserGroupRole> usergrouproles = databaseFactory.UserGroupRead.GetUserGroupRolesFromUserGroup(UserGroupID);
             ViewBag.UserGroupID = UserGroupID;
-            var usergroup = await _userGroupReadRepository.GetByIdAsync(Guid.Parse(UserGroupID));
+            var usergroup = await databaseFactory.UserGroupRead.GetByIdAsync(Guid.Parse(UserGroupID));
             if (usergroup == null)
                 return Unauthorized();
 
@@ -249,7 +237,7 @@ return;
         public async Task<IActionResult> Register(User user)
         {
             ViewBag.Error = true;
-            User usr = await _userReadRepository.GetAsync(o => o.UserName == user.UserName && !o.IsDeleted) ?? new User();
+            User usr = await databaseFactory.UserRead.GetAsync(o => o.UserName == user.UserName && !o.IsDeleted) ?? new User();
             if (usr != null)
             {
                 ViewBag.ErrorMessage = "This user name already registered!";
@@ -259,7 +247,7 @@ return;
             user.Password = "123456";
             user.IsActive = true;
             user.IsDeleted = false;
-            await _userWriteRepository.UpdateAsync(user, this.ActiveUserID());
+            await databaseFactory.UserWrite.UpdateAsync(user, this.ActiveUserID());
 
             return Redirect("UserList");
         }
@@ -267,14 +255,14 @@ return;
         [HttpGet, Authorize(AuthenticationSchemes = SystemMainStatics.DefaultScheme, Roles = "AdminFull")]
         public async Task<IActionResult> Activate(string UserID)
         {
-            var user = await _userReadRepository.GetByIdAsync(UserID.ToGuid());
+            var user = await databaseFactory.UserRead.GetByIdAsync(UserID.ToGuid());
             if (user == null)
             {
                 return NotFound();
             }
             user.IsActive = true;
 
-            await _userWriteRepository.UpdateAsync(user, this.ActiveUserID());
+            await databaseFactory.UserWrite.UpdateAsync(user, this.ActiveUserID());
             return Redirect("UserList");
 
         }
@@ -282,14 +270,14 @@ return;
         [HttpGet, Authorize(AuthenticationSchemes = SystemMainStatics.DefaultScheme, Roles = "AdminFull")]
         public async Task<IActionResult> DeActivate(string UserID)
         {
-            var user = await _userReadRepository.GetByIdAsync(UserID.ToGuid());
+            var user = await databaseFactory.UserRead.GetByIdAsync(UserID.ToGuid());
             if (user == null)
             {
                 return NotFound();
             }
             user.IsActive = false;
 
-            await _userWriteRepository.UpdateAsync(user, this.ActiveUserID());
+            await databaseFactory.UserWrite.UpdateAsync(user, this.ActiveUserID());
             return Redirect("UserList");
 
         }
@@ -297,15 +285,15 @@ return;
         [HttpGet, Authorize(AuthenticationSchemes = SystemMainStatics.DefaultScheme, Roles = "AdminFull")]
         public async Task<IActionResult> ResetPassword(string UserID)
         {
-            var user = await _userReadRepository.GetByIdAsync(Guid.Parse(UserID));
-            await _userWriteRepository.ChangePassword(UserID.ToGuid(), "123456", user.HiddenQuestionAnswer);
+            var user = await databaseFactory.UserRead.GetByIdAsync(Guid.Parse(UserID));
+            await databaseFactory.UserWrite.ChangePassword(UserID.ToGuid(), "123456", user.HiddenQuestionAnswer);
             return Redirect("UserList");
         }
         [HttpPost]
         [EMY_ISINROLE(ControllerName, AuthType.Full)]
         public async Task<IActionResult> AddRole(string UserGroupID, string FormName, AuthType rollType)
         {
-            var roles = _userGroupReadRepository.GetUserGroupRolesFromUserGroup(UserGroupID);
+            var roles = databaseFactory.UserGroupRead.GetUserGroupRolesFromUserGroup(UserGroupID);
             var foundRole = roles.FirstOrDefault(o => !o.IsDeleted && o.FormName == FormName && o.AuthorizeType == rollType);
             if (foundRole != null) return BadRequest("Role is already exist!");
             else
@@ -314,7 +302,7 @@ return;
                 newauth.UserGroupID = Guid.Parse(UserGroupID);
                 newauth.FormName = FormName;
                 newauth.AuthorizeType = rollType;
-                await _userGroupRoleWriteRepository.AddAsync(newauth, this.ActiveUserID());
+                await databaseFactory.UserGroupRoleWrite.AddAsync(newauth, this.ActiveUserID());
                 return Ok("Role is added!");
             }
 
@@ -323,13 +311,13 @@ return;
         [EMY_ISINROLE(ControllerName, AuthType.Full)]
         public async Task<IActionResult> DeleteRole(string UserGroupID, string FormName, AuthType rollType)
         {
-            var roles = _userGroupReadRepository.GetUserGroupRolesFromUserGroup(UserGroupID);
+            var roles = databaseFactory.UserGroupRead.GetUserGroupRolesFromUserGroup(UserGroupID);
             var deletedRole = roles.FirstOrDefault(o => !o.IsDeleted && o.FormName == FormName && o.AuthorizeType == rollType);
             if (deletedRole == null) return NotFound("Role is not found!");
             else
             {
 
-                await _userGroupRoleWriteRepository.RemoveAsync(deletedRole.UserGrpoupRoleID, this.ActiveUserID());
+                await databaseFactory.UserGroupRoleWrite.RemoveAsync(deletedRole.UserGrpoupRoleID, this.ActiveUserID());
                 return Ok("Role Deleted!");
             }
         }
@@ -339,7 +327,7 @@ return;
         [EMY_ISINROLE(ControllerName, AuthType.Full)]
         public IActionResult UserGroups()
         {
-            List<UserGroup> groups = _userGroupReadRepository.GetWhere(o => !o.IsDeleted, false).ToList();
+            List<UserGroup> groups = databaseFactory.UserGroupRead.GetWhere(o => !o.IsDeleted, false).ToList();
             return View(groups);
         }
 
@@ -349,19 +337,19 @@ return;
         {
             if (usergroup.UserGroupID != Guid.Empty)
             {
-                var foundUserGroup = await _userGroupReadRepository.GetByIdAsync(usergroup.UserGroupID);
+                var foundUserGroup = await databaseFactory.UserGroupRead.GetByIdAsync(usergroup.UserGroupID);
                 if (foundUserGroup == null) return NotFound("User group does not exist!");
 
                 foundUserGroup.UserGroupCode = usergroup.UserGroupCode;
                 foundUserGroup.UserGroupName = usergroup.UserGroupName;
                 foundUserGroup.UserGroupToolTip = usergroup.UserGroupToolTip;
-                await _userGroupWriteRepository.UpdateAsync(foundUserGroup, this.ActiveUserID());
+                await databaseFactory.UserGroupWrite.UpdateAsync(foundUserGroup, this.ActiveUserID());
                 return Ok($"User group is updated! ID Number:{usergroup.UserGroupID}");
             }
             else
             {
                 usergroup.DefaultUserGroup = false;
-                await _userGroupWriteRepository.AddAsync(usergroup, this.ActiveUserID());
+                await databaseFactory.UserGroupWrite.AddAsync(usergroup, this.ActiveUserID());
                 return Ok($"User group is added! ID Number:{usergroup.UserGroupID}");
             }
         }
@@ -372,10 +360,10 @@ return;
         [EMY_ISINROLE("UserGroup", AuthType.Full)]
         public async Task<IActionResult> RemoveUserGroup(string UserGroupID)
         {
-            var usergroup = await _userGroupReadRepository.GetByIdAsync(Guid.Parse(UserGroupID));
+            var usergroup = await databaseFactory.UserGroupRead.GetByIdAsync(Guid.Parse(UserGroupID));
             if (usergroup == null) return Unauthorized("User group not found!");
             if (usergroup.DefaultUserGroup) return NotFound("This user group is default user group!");
-            await _userGroupWriteRepository.RemoveAsync(usergroup, this.ActiveUserID());
+            await databaseFactory.UserGroupWrite.RemoveAsync(usergroup, this.ActiveUserID());
             return Ok("User group is deleted!");
         }
     }

@@ -34,7 +34,6 @@ function setupIcons() {
         document.head.append(darkSchemeIcon4);
     }
 
-
     const matcher = window.matchMedia('(prefers-color-scheme:dark)');
     function onUpdate() {
         if (matcher.matches) {
@@ -48,3 +47,4 @@ function setupIcons() {
 }
 
 setupIcons();
+

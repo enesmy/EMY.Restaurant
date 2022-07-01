@@ -22,126 +22,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", b =>
-                {
-                    b.Property<Guid>("BasketID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("AfterDiscountPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("AuthorizeDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatorID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("EmailAdress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullAdress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("IsAuthorized")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("LastUpdaterID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PostalCode")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("RealPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("BasketID");
-
-                    b.ToTable("tblBasket", "basket");
-                });
-
-            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.BasketItem", b =>
-                {
-                    b.Property<Guid>("BasketItemID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("BasketID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatorID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("DeleterID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ItemCount")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ItemPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("LastUpdaterID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MenuID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("MenuText")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("BasketItemID");
-
-                    b.HasIndex("BasketID");
-
-                    b.ToTable("tblBasketItem", "basket");
-                });
-
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.MailList", b =>
                 {
                     b.Property<Guid>("MailListID")
@@ -296,6 +176,151 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.HasKey("MenuCategoryID");
 
                     b.ToTable("tblMenuCategory", "menu");
+                });
+
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Order", b =>
+                {
+                    b.Property<Guid>("OrderID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("AfterDiscountPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("AuthorizeDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeleterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DestinationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("EmailAdress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullAdress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSent")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LastUpdaterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OrderNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderStatus")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentAuthorizationToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PostalCode")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("RealPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("OrderID");
+
+                    b.ToTable("tblOrder", "order");
+                });
+
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.OrderItem", b =>
+                {
+                    b.Property<Guid>("OrderItemID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeleterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSuccess")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ItemCount")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ItemPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("LastUpdaterID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("MenuID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("MenuText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("OrderID")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("OrderItemID");
+
+                    b.HasIndex("OrderID");
+
+                    b.ToTable("tblOrderItem", "order");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Photo", b =>
@@ -620,17 +645,6 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.ToTable("tblUserGroupRoles", "authorize");
                 });
 
-            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.BasketItem", b =>
-                {
-                    b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", "Basket")
-                        .WithMany("BasketItems")
-                        .HasForeignKey("BasketID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Basket");
-                });
-
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Menu", b =>
                 {
                     b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.MenuCategory", "Category")
@@ -640,6 +654,17 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.OrderItem", b =>
+                {
+                    b.HasOne("EMY.Papel.Restaurant.Core.Domain.Entities.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.User", b =>
@@ -664,14 +689,14 @@ namespace EMY.Papel.Restaurant.Infrastructure.Persistence.Migrations
                     b.Navigation("UserGroup");
                 });
 
-            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Basket", b =>
-                {
-                    b.Navigation("BasketItems");
-                });
-
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.MenuCategory", b =>
                 {
                     b.Navigation("Menus");
+                });
+
+            modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("EMY.Papel.Restaurant.Core.Domain.Entities.UserGroup", b =>

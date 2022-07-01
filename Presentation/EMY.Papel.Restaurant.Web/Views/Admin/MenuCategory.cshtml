@@ -14,7 +14,6 @@
             <th scope="col" colspan="3">Menu Categories</th>
         </tr>
         <tr>
-
             <th scope="col">Name</th>
             <th scope="col">Description</th>
             <th scope="col">&nbsp;</th>
@@ -24,13 +23,14 @@
         @foreach (var menuCategory in Model)
         {
             <tr height="25px">
+
                 <td>
                     @Html.DisplayFor(modelItem => menuCategory.Name)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => menuCategory.Description)
                 </td>
-                <td style="max-width:75px;">
+                <td style="width:75px;">
                     <button class="btn-sm btn-secondary" onclick="createOrEditMenuItem('@menuCategory.MenuCategoryID')">Add New Item</button> |
                     <button class="btn-sm btn-primary" onclick="CreateOrEditCategory('@menuCategory.MenuCategoryID')">Edit</button> |
                     <button class="btn-sm btn-danger" onclick="DeleteMenuCategory('@menuCategory.MenuCategoryID')">Delete</button>
@@ -43,17 +43,22 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                    <td>&nbsp;</td>
                                     <td>#</td>
                                     <td>Name</td>
                                     <td>Description</td>
                                     <td>Price</td>
-                                    <td>&nbsp;</td>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach (var menu in menuCategory.Menus)
                                 {
                                     <tr>
+                                        <td style="width:50px;">
+                                            <button class="btn-sm btn-primary" onclick="createOrEditMenuItem('@menuCategory.MenuCategoryID', '@menu.MenuID');">Edit</button> |
+                                            <button class="btn-sm btn-danger" onclick="DeleteMenu('@menu.MenuID');">Delete</button>
+                                        </td>
                                         <td>
                                             @Html.DisplayFor(modelItem => menu.Code)
                                         </td>
@@ -66,14 +71,7 @@
                                         <td>
                                             @Html.DisplayFor(modelItem => menu.Price)
                                         </td>
-                                        <td style="width:50px;">
-
-                                            <button class="btn-sm btn-primary" onclick="createOrEditMenuItem('@menuCategory.MenuCategoryID', '@menu.MenuID');">Edit</button> |
-                                            <button class="btn-sm btn-danger" onclick="DeleteMenu('@menu.MenuID');">Delete</button>
-
-                                        </td>
                                     </tr>
-
                                 }
                             </tbody>
                         </table>
@@ -96,32 +94,28 @@
 
     function SaveCategory() {
 
-        var Name = document.getElementById('Name').value;
-        var MenuCategoryID = document.getElementById('MenuCategoryID').value;
-        var Description = document.getElementById('Description').value;
-
-
         var formData = new FormData();
+
         formData.append('Name', document.getElementById('Name').value);
         formData.append('MenuCategoryID', document.getElementById('MenuCategoryID').value);
         formData.append('Description', document.getElementById('Description').value);
-        //formData.append('_RequestVerificationToken', document.getElementById('__RequestVerificationToken').value);
-
         formData.append('headerPhoto', document.getElementById('headerPhoto').files[0]);
         formData.append('logoPhoto', document.getElementById('logoPhoto').files[0]);
-
-        MessageBox.AjaxPost(
-            '/Admin/SaveCategory',
-            formData,
-            function(data) {
-                console.log('Success!', data)
+        formData.append('__RequestVerificationToken', document.getElementsByName('__RequestVerificationToken')[0].value)
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/SaveCategory',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function(response) {
+                console.log('Success!', response)
                 location.reload();
             },
-            function(data) {
-                MessageBox.Show('Error', data.responseText)
+            error: function(err) {
+                MessageBox.Show('Error', err.responseText)
             }
-
-        );
+        });
     }
 
     function createOrEditMenuItem(menuCategoryID, id) {
